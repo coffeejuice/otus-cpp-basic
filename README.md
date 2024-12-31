@@ -5,9 +5,10 @@ OTUS C++ Basic traning by Aleksandr Troshin
 > - [S.Chacon, B.Straub Pro Git](https://git-scm.com/book/ru/v2)
 > - [Connecting to GitHub with SSH](https://docs.github.com/en/authentication/connecting-to-github-with-ssh)
 
+
 > ## Git commands
 > - **git config --global user.email "alex.troshin@outlook.com"** - set email for the repository user
-> - git config --global user.name "Alex on Laptop" - set nickname for the repository user
+> - **git config --global user.name "Alex on Laptop"** - set nickname for the repository user
 > - **git branch** - lists all branches, highlites current branch with *
 > - **git brnch -d homework_01** - delete branch "homework_01"
 > - **git checkout -b homework_01** - create new branch and switch to it (equivalent to **git branch homework_01** + **git checkout homework_01**)
@@ -18,7 +19,7 @@ OTUS C++ Basic traning by Aleksandr Troshin
 > - **git push** - upload to Github the 2nd and foolowing commits
 > - **git help git**, **git help -a** and **git help -g** - get help on Git commands and subcommands
 > - **git checkout main** + **git merge homework_01** - switch to branch "main", then merge "homework_01" branch into "main" one
-> - **
+
 
 > ## Shell commands
 > - **ls -la** - list directory content including hidden one
