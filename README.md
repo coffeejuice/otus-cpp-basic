@@ -10,7 +10,8 @@ OTUS C++ Basic traning by Aleksandr Troshin
 > - **git config --global user.email "alex.troshin@outlook.com"** - set email for the repository user
 > - **git config --global user.name "Alex on Laptop"** - set nickname for the repository user
 > - **git branch** - lists all branches, highlites current branch with *
-> - **git brnch -d homework_01** - delete branch "homework_01"
+> - **git branch -d homework_01** - delete local branch "homework_01"
+> - **git push -d origin homework_01** - delete remote branch "homework_01"
 > - **git checkout -b homework_01** - create new branch and switch to it (equivalent to **git branch homework_01** + **git checkout homework_01**)
 > - **git add filename.ext** - ask git to watch the file "filename.ext"
 > - **git commit -m "commit name"** - add new commit/version to the Git, assign commit's name "commit name"
