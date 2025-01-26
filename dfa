@@ -1,0 +1,41 @@
+[33mcommit 28128c2253b9f92e011888640e8e5acc58e8a946[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32m01-02-Hello_world[m[33m)[m
+Author: Alex on Laptop <alex.troshin@outlook.com>
+Date:   Sun Jan 26 15:38:21 2025 +0800
+
+    Move function todo_move_me_out to separte *.cpp file
+
+[33mcommit 51323832dcb5112a507c643da87667e1e592644c[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;31morigin/01-02-Hello_world[m[33m, [m[1;32mmain[m[33m)[m
+Author: AleksandrTroshin <93296577+coffeejuice@users.noreply.github.com>
+Date:   Tue Dec 31 12:34:19 2024 +0800
+
+    update Git commands in README.md
+
+[33mcommit e00ea08da76701537bc03db4b3bcfd391143006f[m
+Author: AleksandrTroshin <93296577+coffeejuice@users.noreply.github.com>
+Date:   Tue Dec 31 12:33:15 2024 +0800
+
+    update Git commands to README.md
+
+[33mcommit f8d4f3b0630e89f0838d188e006aea6cadb7938f[m[33m ([m[1;32mhomework_01[m[33m)[m
+Author: Alex on Laptop <alex.troshin@outlook.com>
+Date:   Tue Dec 31 11:53:55 2024 +0800
+
+    add hello.txt
+
+[33mcommit ac256c88b2146ee138175a65b595942bbe462480[m
+Author: AleksandrTroshin <93296577+coffeejuice@users.noreply.github.com>
+Date:   Tue Dec 31 11:08:08 2024 +0800
+
+    Update README.md
+
+[33mcommit eb6213f6d1f4171a39880c289af5672c5ea5802b[m
+Author: AleksandrTroshin <93296577+coffeejuice@users.noreply.github.com>
+Date:   Tue Dec 31 10:47:30 2024 +0800
+
+    Update README.md
+
+[33mcommit 15032dc4536e2ce9068110c4aa154ca259d3c542[m
+Author: AleksandrTroshin <93296577+coffeejuice@users.noreply.github.com>
+Date:   Tue Dec 31 10:46:46 2024 +0800
+
+    Initial commit
