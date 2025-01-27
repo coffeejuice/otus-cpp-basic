@@ -26,3 +26,9 @@ OTUS C++ Basic traning by Aleksandr Troshin
 > ## Shell commands
 > - **ls -la** - list directory content including hidden one
 > - **touch filename.ext** - create empty text file "filename.ext"
+
+> ## VScode setup
+> - [https://code.visualstudio.com/docs/setup/windows#_install-vs-code-on-windows](Install VSCode)
+> - [https://code.visualstudio.com/docs/cpp/config-msvc](Configure VS Code for Microsoft C++)
+> - Run 'Developer Command Prompt for Visual Studio'
+> - Type in 'code' to open VSCode in the folder
