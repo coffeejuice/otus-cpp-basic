@@ -32,3 +32,6 @@ OTUS C++ Basic traning by Aleksandr Troshin
 > - [Configure VS Code for Microsoft C++](https://code.visualstudio.com/docs/cpp/config-msvc)
 > - Run 'Developer Command Prompt for Visual Studio'
 > - Type in 'code' to open VSCode in the folder
+
+> ## CMake setup
+> - [Install CMake](https://cmake.org/download/)
