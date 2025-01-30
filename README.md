@@ -7,6 +7,9 @@ OTUS C++ Basic traning by Aleksandr Troshin
 > - [cPlusPlus.com](https://cplusplus.com/reference/)
 > - [cppReference.com](https://en.cppreference.com/w/)
 > - [Recursion](http://cppstudio.com/post/418/)
+> - [How to mix C and C++](https://isocpp.org/wiki/faq/mixing-c-and-cpp)
+> - [Efficient argument passing in C++11](https://www.codesynthesis.com/~boris/blog/2012/06/19/efficient-argument-passing-cxx11-part1/)
+> - [Move semantics and rvalue references in C++11](https://www.cprogramming.com/c++11/rvalue-references-and-move-semantics-in-c++11.html)
 
 
 > ## Git commands
