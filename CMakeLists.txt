@@ -1,23 +1,12 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.12)
 
-project(03.homework)
+project(guess_project LANGUAGES CXX)
 
-add_executable(
-	check_value
-	check_value.cpp
+add_executable(guess_project
+	guess_the_number.cpp
+	guess_funcs.hpp
+	guess_funcs.cpp
 )
 
-add_executable(
-	random_value
-	random_value.cpp
-)
-
-add_executable(
-	high_scores
-	high_scores.cpp
-)
-
-add_executable(
-	argument
-	argument.cpp
-)
+target_compile_features(guess_project PUBLIC cxx_std_17)
+target_compile_options(guess_project PUBLIC /W4 /WX)
