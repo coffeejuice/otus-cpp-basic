@@ -1,3 +1,10 @@
+# Folders
+build/
+
+# Choice
+*.ilk
+*.pdb
+
 # Prerequisites
 *.d
 
