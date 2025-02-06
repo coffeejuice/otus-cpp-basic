@@ -1,12 +1,22 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.30)
+project(sea_battle CXX)
 
-project(guess_project LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 20)
 
-add_executable(guess_project
-	guess_the_number.cpp
-	guess_funcs.hpp
-	guess_funcs.cpp
-)
+add_executable(sea_battle main.cpp
+        Menu.cpp
+        Menu.hpp
+        Field.cpp
+        Field.hpp
+        GameLogic.cpp
+        GameLogic.hpp
+        Action.cpp
+        Action.hpp
+        GameLoop.cpp
+        GameLoop.hpp)
 
-target_compile_features(guess_project PUBLIC cxx_std_17)
-target_compile_options(guess_project PUBLIC /W4 /WX)
+if (MSVC)
+    target_compile_options(sea_battle PUBLIC /W4 /WX)
+else()
+    target_compile_options(sea_battle PUBLIC  -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion)
+endif()
