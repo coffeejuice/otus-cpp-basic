@@ -15,7 +15,11 @@ OTUS C++ Basic traning by Aleksandr Troshin
 > - [*.cpp /D for #ifdef](https://learn.microsoft.com/en-us/cpp/build/reference/d-preprocessor-definitions?view=msvc-170&redirectedfrom=MSDN)
 > - [Stroustrup. So, what's wrong with using macros?](https://www.stroustrup.com/bs_faq2.html#macro)
 > - [Where is __dso_handle defined?](https://stackoverflow.com/questions/34308720/where-is-dso-handle-defined)
-> - []()
+> - [CMake Tutorial — CMake 3.21.0 Documentation](https://cmake.org/cmake/help/latest/guide/tutorial/index.html)
+> - [CMake Tutorial - функция find_package.](https://cmake.org/cmake/help/latest/command/find_package.html)
+> - [CMake Tutorial - функция install](https://cmake.org/cmake/help/latest/command/install.html)
+> - [CMake Tutorial - Спискок всех переменных](https://cmake.org/cmake/help/latest/manual/cmake-variables.7.html)
+> - [Mastering CMake для гурманов. Справочник по дополнительным возможностям CMake.](https://cmake.org/cmake/help/book/mastering-cmake/)
 
 > ## Git commands
 > ### Setup git on new PC
