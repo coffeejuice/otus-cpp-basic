@@ -8,4 +8,5 @@ int main(int argc, char** argv) {
         std::cout << "Usage: " << argv[0]  << " number" << std::endl;
         return EXIT_SUCCESS;
     }
+    return 
 }
