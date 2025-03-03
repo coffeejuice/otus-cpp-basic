@@ -1,12 +1,15 @@
 cmake_minimum_required(VERSION 3.12)
 
-project(guess_project LANGUAGES CXX)
+project(Example3 VERSION 0.0.2)
 
-add_executable(guess_project
-	guess_the_number.cpp
-	guess_funcs.hpp
-	guess_funcs.cpp
-)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-target_compile_features(guess_project PUBLIC cxx_std_17)
-target_compile_options(guess_project PUBLIC /W4 /WX)
+if(WIN32)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+    set(BUILD_SHARED_LIBS TRUE)
+endif()
+
+add_subdirectory(lib)
+add_subdirectory(dynamic_lib)
+add_subdirectory(src)
