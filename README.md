@@ -37,6 +37,12 @@ OTUS C++ Basic traning by Aleksandr Troshin
 > - **git push** - upload to Github the 2nd and foolowing commits
 > - **git help git**, **git help -a** and **git help -g** - get help on Git commands and subcommands
 > - **git checkout main** + **git merge homework_01** - switch to branch "main", then merge "homework_01" branch into "main" one
+> ### Remote Branches
+> - __git branch -r__ - Lists all the remote branches.
+> - __git branch -r -v__ - Lists all the remote branches with the latest commit hash and commit message.
+> - __git ls-remote__ - Lists all the references in the remote repository, including the branches.
+> - __git remote show [remote_name]__ - Shows information about the specified remote, including the remote branches.
+> - __git branch -a__ - Shows all the local and remote branches.
 
 
 > ## Shell commands
@@ -51,3 +57,16 @@ OTUS C++ Basic traning by Aleksandr Troshin
 
 > ## CMake setup
 > - [Install CMake](https://cmake.org/download/)
+
+
+> ## References 
+> ```c++
+> int a;
+> int* v; # we CAN initialize address v
+> v = &a; # v is address where a is stored 
+>
+> # Now we chan change address v, so v will point to another variable
+>
+> int b;
+> v = &b; # v is address where b is stored 
+> ```
