@@ -1,9 +1,15 @@
 cmake_minimum_required(VERSION 3.30)
 
+set(PATCH_VERSION "1" CACHE INTERNAL "Patch version")
+set(PROJECT_VERSION 1.0.${PATCH_VERSION})
+
+message("!!!! PROJECT_VERSION = ${PROJECT_VERSION}")
+message("!!!! PROJECT_VERSION_PATCH = ${PROJECT_VERSION_PATCH}")
+
 # Using VERSION in 'project' will deifine varaibles:
 # sea_batle_VERSION_MAJOR and sea_batle_VERSION_MINOR
 
-project(sea_battle VERSION 1.0.0 LANGUAGES CXX)  
+project(sea_battle VERSION ${PROJECT_VERSION} LANGUAGES CXX)  
 
 # Set input header file 'main.h.in' for importing User Variables
 # Variables, specified in header file will replace variables defined 
