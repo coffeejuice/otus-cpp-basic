@@ -64,6 +64,9 @@ OTUS C++ Basic traning by Aleksandr Troshin
 > int a;
 > int* v; # we CAN initialize address v
 > v = &a; # v is address where a is stored 
+> int& ref == *v; # ref is alias of a
+> int* t = v + 1; t is address of the next cell
+> 
 >
 > # Now we chan change address v, so v will point to another variable
 >
