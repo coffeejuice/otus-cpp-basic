@@ -15,7 +15,7 @@ OTUS C++ Basic traning by Aleksandr Troshin
 > - [*.cpp /D for #ifdef](https://learn.microsoft.com/en-us/cpp/build/reference/d-preprocessor-definitions?view=msvc-170&redirectedfrom=MSDN)
 > - [Stroustrup. So, what's wrong with using macros?](https://www.stroustrup.com/bs_faq2.html#macro)
 > - [Where is __dso_handle defined?](https://stackoverflow.com/questions/34308720/where-is-dso-handle-defined)
-> - []()
+> - [isocpp.org: What is a reference?](https://isocpp.org/wiki/faq/references)
 
 > ## Git commands
 > ### Setup git on new PC
@@ -61,6 +61,21 @@ OTUS C++ Basic traning by Aleksandr Troshin
 
 > ## References 
 > ```c++
+> void swap(int& i, int& j)
+> {
+>   int tmp = i;
+>   i = j;
+>   j = tmp;
+> }
+> int main()
+> {
+>   int x, y;
+>   // ...
+>   swap(x,y);
+>   // ...
+> }
+>
+>
 > int a;
 > int* v; # we CAN initialize address v
 > v = &a; # v is address where a is stored 
