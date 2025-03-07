@@ -1,12 +1,46 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.5)
 
-project(guess_project LANGUAGES CXX)
+project(08.Classes)
 
-add_executable(guess_project
-	guess_the_number.cpp
-	guess_funcs.hpp
-	guess_funcs.cpp
+add_executable(00_structure 00_structure.cpp)
+set_target_properties(00_structure PROPERTIES
+	CXX_STANDARD 17
+	CXX_STANDARD_REQUIRED ON
 )
 
-target_compile_features(guess_project PUBLIC cxx_std_17)
-target_compile_options(guess_project PUBLIC /W4 /WX)
+add_executable(01_class 01_class.cpp)
+set_target_properties(01_class PROPERTIES
+	CXX_STANDARD 17
+	CXX_STANDARD_REQUIRED ON
+)
+
+add_executable(02_methods 02_methods.cpp)
+set_target_properties(02_methods PROPERTIES
+	CXX_STANDARD 17
+	CXX_STANDARD_REQUIRED ON
+)
+
+add_executable(03_constructor 03_constructor.cpp)
+set_target_properties(03_constructor PROPERTIES
+	CXX_STANDARD 17
+	CXX_STANDARD_REQUIRED ON
+)
+
+add_executable(04_destructor 04_destructor.cpp)
+set_target_properties(04_destructor PROPERTIES
+	CXX_STANDARD 17
+	CXX_STANDARD_REQUIRED ON
+)
+
+add_executable(05_static 05_static.cpp)
+set_target_properties(05_static PROPERTIES
+	CXX_STANDARD 17
+	CXX_STANDARD_REQUIRED ON
+)
+
+
+add_executable(06_structure_nested 06_structure_nested.cpp)
+set_target_properties(06_structure_nested PROPERTIES
+	CXX_STANDARD 17
+	CXX_STANDARD_REQUIRED ON
+)
