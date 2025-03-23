@@ -3,10 +3,10 @@
 #include "Point.hpp"
 #include "Velocity.hpp"
 
-class Ball {
+class Dust {
   public:
-    Ball();
-    Ball(const Point& center, const Velocity& velocity, double radius, const Color& color, bool isCollidable);
+    Dust();
+    Dust(const Point& center, const Velocity& velocity, double radius, const Color& color);
 
     void draw(Painter& painter) const;
 
@@ -24,13 +24,15 @@ class Ball {
 
     double getMass() const;
 
-    bool getIsCollidable() const;
+    bool isAlive();
+    void kill();
 
   private:
+    bool isKilled = false;
+    int ticksCount{};
     Point center{};
     Velocity velocity{};
     Color color{};
     double radius{};
     double mass{};
-    bool isCollidable;
 };

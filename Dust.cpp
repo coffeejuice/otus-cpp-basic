@@ -1,27 +1,27 @@
-#include "Ball.hpp"
+#include "Dust.hpp"
 #include <cmath>
 // #define _USE_MATH_DEFINES
 #include <math.h>
 
-Ball::Ball() = default;
+Dust::Dust() = default;
 
-Ball::Ball(const Point& center, const Velocity& velocity, double radius, const Color& color, bool isCollidable) {
+Dust::Dust(const Point& center, const Velocity& velocity, double radius, const Color& color) {
+    ticksCount = 200;
     this->center = center;
     this->velocity = velocity;
     this->radius = radius;
     this->color = color;
-    this->isCollidable = isCollidable;
 }
 
 /**
  * @brief Выполняет отрисовку объекта
- * @details объект Ball абстрагирован от конкретного
+ * @details объект Dust абстрагирован от конкретного
  * способа отображения пикселей на экране. Он "знаком"
  * лишь с интерфейсом, который предоставляет Painter
  * Рисование выполняется путем вызова painter.draw(...)
  * @param painter контекст отрисовки
  */
-void Ball::draw(Painter& painter) const {
+void Dust::draw(Painter& painter) const {
     painter.draw(getCenter(), getRadius(), getColor());
 }
 
@@ -29,14 +29,14 @@ void Ball::draw(Painter& painter) const {
  * Задает скорость объекта
  * @param velocity новое значение скорости
  */
-void Ball::setVelocity(const Velocity& velocity) {
+void Dust::setVelocity(const Velocity& velocity) {
     this->velocity = velocity;
 }
 
 /**
  * @return скорость объекта
  */
-Velocity Ball::getVelocity() const {
+Velocity Dust::getVelocity() const {
     return velocity;
 }
 
@@ -44,14 +44,14 @@ Velocity Ball::getVelocity() const {
  * Задает цвет объекта
  * @param color новое значение цвета
  */
-void Ball::setColor(const Color& color) {
+void Dust::setColor(const Color& color) {
     this->color = color;
 }
 
 /**
  * @return цвет
  */
-Color Ball::getColor() const {
+Color Dust::getColor() const {
     return color;
 }
 
@@ -59,14 +59,14 @@ Color Ball::getColor() const {
  * Задает координаты центра объекта
  * @param center новый центр объекта
  */
-void Ball::setCenter(const Point& center) {
+void Dust::setCenter(const Point& center) {
     this->center = center;
 }
 
 /**
  * @return центр объекта
  */
-Point Ball::getCenter() const {
+Point Dust::getCenter() const {
     return center;
 }
 
@@ -74,7 +74,7 @@ Point Ball::getCenter() const {
  * Задаёт значение радиуса объекта
  * @param radius новое значение радиуса
  */
-void Ball::setRadius(double radius) {
+void Dust::setRadius(double radius) {
     this->radius = radius;
 }
 
@@ -83,7 +83,7 @@ void Ball::setRadius(double radius) {
  * @details обратите внимание, что метод setRadius()
  * не требуется
  */
-double Ball::getRadius() const {
+double Dust::getRadius() const {
     return radius;
 }
 
@@ -94,10 +94,22 @@ double Ball::getRadius() const {
  * плотностью. В этом случае масса в условных единицах
  * эквивалентна объему: PI * radius^3 * 4. / 3.
  */
-double Ball::getMass() const {
+double Dust::getMass() const {
     return M_PI * pow(radius, 3) * 4. / 3.;
 }
 
-bool Ball::getIsCollidable() const {
-    return isCollidable;
+/**
+ * @brief Возращает статус true если объект живой
+ * @details Проверяет время жизни частицы и статус isKilled
+ */
+bool Dust::isAlive() {
+    ticksCount--;
+    return (ticksCount > 0 && !isKilled);
+}
+
+/**
+ * @brief Устанавливает статус isKilled
+ */
+void Dust::kill() {
+    isKilled = true;
 }

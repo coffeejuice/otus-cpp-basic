@@ -7,6 +7,9 @@ class Color {
     double red() const;
     double green() const;
     double blue() const;
+    void setRed(double red);
+    void setGreen(double green);
+    void setBlue(double blue);
 
   private:
     double r{};

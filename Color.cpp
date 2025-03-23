@@ -16,3 +16,15 @@ double Color::green() const {
 double Color::blue() const {
     return b;
 }
+
+void Color::setRed(double red) {
+    r = red;
+}
+
+void Color::setGreen(double green) {
+    g = green;
+}
+
+void Color::setBlue(double blue) {
+    b = blue;
+}
