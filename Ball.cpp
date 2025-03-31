@@ -5,13 +5,10 @@
 
 Ball::Ball() = default;
 
-Ball::Ball(const Point& center, const Velocity& velocity, double radius, const Color& color, bool isCollidable) {
-    this->center = center;
-    this->velocity = velocity;
-    this->radius = radius;
-    this->color = color;
-    this->isCollidable = isCollidable;
-}
+Ball::Ball(const Point& center, const Velocity& velocity, double radius,
+           const Color& color, bool isCollidable)
+    : _center{center}, _velocity{velocity}, _radius{radius}, _color{color},
+      _isCollidable{isCollidable} {}
 
 /**
  * @brief Выполняет отрисовку объекта
@@ -30,14 +27,14 @@ void Ball::draw(Painter& painter) const {
  * @param velocity новое значение скорости
  */
 void Ball::setVelocity(const Velocity& velocity) {
-    this->velocity = velocity;
+    this->_velocity = velocity;
 }
 
 /**
  * @return скорость объекта
  */
 Velocity Ball::getVelocity() const {
-    return velocity;
+    return _velocity;
 }
 
 /**
@@ -45,14 +42,14 @@ Velocity Ball::getVelocity() const {
  * @param color новое значение цвета
  */
 void Ball::setColor(const Color& color) {
-    this->color = color;
+    this->_color = color;
 }
 
 /**
  * @return цвет
  */
 Color Ball::getColor() const {
-    return color;
+    return _color;
 }
 
 /**
@@ -60,14 +57,14 @@ Color Ball::getColor() const {
  * @param center новый центр объекта
  */
 void Ball::setCenter(const Point& center) {
-    this->center = center;
+    this->_center = center;
 }
 
 /**
  * @return центр объекта
  */
 Point Ball::getCenter() const {
-    return center;
+    return _center;
 }
 
 /**
@@ -75,7 +72,7 @@ Point Ball::getCenter() const {
  * @param radius новое значение радиуса
  */
 void Ball::setRadius(double radius) {
-    this->radius = radius;
+    this->_radius = radius;
 }
 
 /**
@@ -84,7 +81,7 @@ void Ball::setRadius(double radius) {
  * не требуется
  */
 double Ball::getRadius() const {
-    return radius;
+    return _radius;
 }
 
 /**
@@ -95,9 +92,9 @@ double Ball::getRadius() const {
  * эквивалентна объему: PI * radius^3 * 4. / 3.
  */
 double Ball::getMass() const {
-    return M_PI * pow(radius, 3) * 4. / 3.;
+    return M_PI * pow(_radius, 3) * 4. / 3.;
 }
 
 bool Ball::getIsCollidable() const {
-    return isCollidable;
+    return _isCollidable;
 }

@@ -34,7 +34,7 @@ void Physics::collideBalls(std::vector<Ball>& balls, std::vector<Dust>& dusts) {
                 collisionDistance * collisionDistance;
 
             if (distanceBetweenCenters2 < collisionDistance2 &&
-                (a->getIsCollidable() || b->getIsCollidable())) {
+                (a->getIsCollidable() && b->getIsCollidable())) {
                 processCollision(*a, *b, distanceBetweenCenters2);
                 createDust(*a, *b, dusts);
             }
@@ -44,6 +44,10 @@ void Physics::collideBalls(std::vector<Ball>& balls, std::vector<Dust>& dusts) {
 
 void Physics::collideWithBox(std::vector<Ball>& balls) const {
     for (Ball& ball : balls) {
+        // Обработка шаров со свойством isCollidable = false
+        if (!ball.getIsCollidable())
+            continue;
+
         const Point p = ball.getCenter();
         const double r = ball.getRadius();
         // определяет, находится ли v в диапазоне (lo, hi) (не включая границы)
@@ -151,7 +155,9 @@ void Physics::createDust(Ball& a, Ball& b, std::vector<Dust>& dusts) {
         velocityVector.y = averageVelocity * std::sin(angle);
 
         // Создаем новый объект Dust
-        // Dust newDust(dustCenter, Velocity(velocityVector), averageRadius, a.getColor());
-        dusts.push_back(Dust(dustCenter, Velocity(velocityVector), averageRadius, a.getColor()));
+        // Dust newDust(dustCenter, Velocity(velocityVector), averageRadius,
+        // a.getColor());
+        dusts.push_back(Dust(dustCenter, Velocity(velocityVector),
+                             averageRadius, a.getColor()));
     }
 }

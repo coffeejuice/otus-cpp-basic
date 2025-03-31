@@ -27,10 +27,10 @@ class Ball {
     bool getIsCollidable() const;
 
   private:
-    Point center{};
-    Velocity velocity{};
-    Color color{};
-    double radius{};
-    double mass{};
-    bool isCollidable;
+    Point _center{};
+    Velocity _velocity{};
+    Color _color{};
+    double _radius{};
+    double _mass{};
+    bool _isCollidable;
 };
