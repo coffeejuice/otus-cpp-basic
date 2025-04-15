@@ -1,5 +1,8 @@
 # Folders
-build/
+/build/
+/cmake-build-debug/
+/.idea/
+/.git/
 
 # Choice
 *.ilk
@@ -37,3 +40,4 @@ build/
 *.exe
 *.out
 *.app
+
