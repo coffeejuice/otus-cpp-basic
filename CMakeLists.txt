@@ -4,6 +4,12 @@ project(09.Polymorphism)
 
 add_subdirectory(inheritance)
 
+add_executable(a_b_c_d a_b_c_d.cpp)
+set_target_properties(a_b_c_d PROPERTIES
+	CXX_STANDARD 17
+	CXX_STANDARD_REQUIRED ON
+)
+
 add_executable(animal animal.cpp)
 set_target_properties(animal PROPERTIES
 	CXX_STANDARD 17
