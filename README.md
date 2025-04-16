@@ -17,6 +17,7 @@ OTUS C++ Basic traning by Aleksandr Troshin
 > - [Where is __dso_handle defined?](https://stackoverflow.com/questions/34308720/where-is-dso-handle-defined)
 > - [isocpp.org: What is a reference?](https://isocpp.org/wiki/faq/references)
 > - [Bost.Program_options - parsing command arguments](https://www.boost.org/doc/libs/1_58_0/doc/html/program_options.html)
+> - [Спецификация на ключевое слово virtual](https://en.cppreference.com/w/cpp/language/virtual)
 
 > ## Git commands
 > ### Setup git on new PC
