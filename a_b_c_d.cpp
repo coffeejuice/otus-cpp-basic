@@ -3,38 +3,42 @@
 
 class A {
 public:
-    int m_a = 30;
-
     void printA() const {
-        std::cout << m_a << std::endl;
+        std::cout << m_ << std::endl;
     }
+
+private:
+    int m_ = 30;
 };
 
 class B : public A {
 public:
-    int m_b = 40;
-
     void printB() const {
-        std::cout << m_b << std::endl;
+        std::cout << m_ << std::endl;
     }
+
+private:
+    int m_ = 40;
 };
 
 class C : public A {
 public:
-    int m_b = 50;
-
     void printC() const {
-        std::cout << m_b << std::endl;
+        std::cout << m_ << std::endl;
     }
+
+private:
+    int m_ = 50;
 };
 
 class D : public B, public C {
 public:
-    int m_d = 60;
-
     void printD() const {
-        std::cout << m_d << std::endl;
+        std::cout << m_ << std::endl;
     }
+
+private:
+    int m_ = 60;
 };
 
 int main() {
