@@ -1,7 +1,9 @@
 #include <iostream>
 #include <limits>
 #include <cmath>
-#include "random_shuffle.hpp"
+#include <map>
+#include <random>
+// #include "random_shuffle.hpp"
 
 class IStatistics {
 public:
@@ -131,9 +133,9 @@ private:
 #include <vector>
 #include <algorithm> // For std::sort
 
-class Percentile90 : public IStatistics {
+class Percentile : public IStatistics {
 public:
-    Percentile90() {
+    Percentile(int const percentile) : m_percentile(percentile) {
     }
 
     void update(const double next) override {
@@ -142,38 +144,28 @@ public:
     }
 
     double eval() const override {
+        // std::cout << m_percentile << " " <<  std::to_string(m_percentile) << std::endl;
         if (m_values.empty()) {
             return 0.0;
         }
-
-        // Make a copy to avoid modifying the original data during sort
         std::vector<double> sorted_values = m_values;
         std::sort(sorted_values.begin(), sorted_values.end());
-
-        // Calculate the position for 90th percentile
-        // For 90th percentile, we need the value at position: (n * 0.9)
-        double position = sorted_values.size() * 0.9;
-
-        // If position is an integer, take average of this and next value
-        if (position == static_cast<int>(position)) {
-            int idx = static_cast<int>(position);
-            // Handle edge case where idx is the last element
-            if (idx == sorted_values.size() - 1) {
-                return sorted_values[idx];
-            }
-            return (sorted_values[idx] + sorted_values[idx + 1]) / 2.0;
-        }
-
-        // Otherwise, round up to next integer position
+        const double position = sorted_values.size() * m_percentile / 100.0;
         return sorted_values[static_cast<int>(std::ceil(position)) - 1];
     }
 
-    const char *name() const override {
-        return "percentile_90";
+    const char* name() const override {
+        static std::map<int, std::string> names;
+        if (names[m_percentile].empty()) {
+            names[m_percentile] = "Percentile" + std::to_string(m_percentile);
+        }
+        return names[m_percentile].c_str();
+
     }
 
 private:
     std::vector<double> m_values;
+    int m_percentile;
 };
 
 class FeedNext {
@@ -269,21 +261,25 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    const size_t statistics_count = 4;
+    const size_t statistics_count = 6;
     IStatistics *statistics[statistics_count];
 
     statistics[0] = new Min{};
     statistics[1] = new Max{};
     statistics[2] = new Mean{};
     statistics[3] = new StdDev{};
+    statistics[4] = new Percentile{90};
+    statistics[5] = new Percentile{95};
 
     double val = 0;
     while (feeder->next(val)) {
-        std::cout << "(" << val << ")";
+        std::cout << val << " ";
         for (size_t i = 0; i < statistics_count; ++i) {
             statistics[i]->update(val);
         }
     }
+
+    std::cout << std::endl;
 
     // Handle invalid input data
     // if (!std::cin.eof() && !std::cin.good()) {
