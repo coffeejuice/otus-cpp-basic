@@ -1,12 +1,41 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.5)
 
-project(guess_project LANGUAGES CXX)
+project(lecture_11_templates)
 
-add_executable(guess_project
-	guess_the_number.cpp
-	guess_funcs.hpp
-	guess_funcs.cpp
+add_executable(lec_11_01_func_max                 lec_11_01_func_max.cpp)
+add_executable(lec_11_02_func_max_float           lec_11_02_func_max_float.cpp)
+add_executable(lec_11_03_func_max_template        lec_11_03_func_max_template.cpp)
+add_executable(lec_11_04_func_max_specialization  lec_11_04_func_max_specialization.cpp)
+add_executable(lec_11_05_func_type_greater        lec_11_05_func_max_type_greater.cpp)
+add_executable(lec_11_06_func_factorial           lec_11_06_func_factorial.cpp)
+add_executable(lec_11_07_func_several_args        lec_11_07_func_several_args.cpp)
+add_executable(lec_11_08_func_generate            lec_11_08_func_generate.cpp)
+add_executable(lec_11_09_func_cpp_impl            lec_11_09_func_cpp_impl.cpp lec_11_09_12_func_cpp_source.cpp lec_11_09_02_func_cpp_source.cpp)
+add_executable(lec_11_10_class_template           lec_11_10_class_template.cpp)
+add_executable(lec_11_11_class_template_inherit   lec_11_11_class_template_inherit.cpp)
+add_executable(lec_11_12_class_template_specialization       lec_11_12_class_template_specialization.cpp)
+add_executable(lec_11_13_class_full_template_specialization  lec_11_13_class_full_template_specialization.cpp)
+add_executable(lec_11_14_class_template_method               lec_11_14_class_template_method.cpp)
+add_executable(lec_11_15_class_non_template_template         lec_11_15_class_non_template_template.cpp)
+
+
+set_target_properties(
+        lec_11_01_func_max 
+        lec_11_02_func_max_float
+        lec_11_03_func_max_template
+        lec_11_04_func_max_specialization
+        lec_11_05_func_type_greater
+        lec_11_06_func_factorial
+        lec_11_07_func_several_args
+        lec_11_08_func_generate
+        lec_11_09_func_cpp_impl
+        lec_11_10_class_template
+        lec_11_11_class_template_inherit
+        lec_11_12_class_template_specialization
+        lec_11_13_class_full_template_specialization
+        lec_11_14_class_template_method
+        lec_11_15_class_non_template_template
+    PROPERTIES 
+    CXX_STANDARD 17 
+    CXX_STANDARD_REQUIRED ON
 )
-
-target_compile_features(guess_project PUBLIC cxx_std_17)
-target_compile_options(guess_project PUBLIC /W4 /WX)
