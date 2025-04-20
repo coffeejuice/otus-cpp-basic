@@ -1,12 +1,24 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.5)
 
-project(guess_project LANGUAGES CXX)
+project(10.details)
 
-add_executable(guess_project
-	guess_the_number.cpp
-	guess_funcs.hpp
-	guess_funcs.cpp
-)
+add_executable(explicit explicit.cpp)
+set_target_properties(explicit PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
 
-target_compile_features(guess_project PUBLIC cxx_std_17)
-target_compile_options(guess_project PUBLIC /W4 /WX)
+add_executable(convertion convertion.cpp)
+set_target_properties(convertion PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
+
+add_executable(complex_value complex_value.cpp)
+set_target_properties(complex_value PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
+
+add_executable(complex_value_copy complex_value_copy.cpp)
+set_target_properties(complex_value_copy PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
+
+add_executable(destructors destructors.cpp)
+set_target_properties(destructors PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
+
+add_executable(virtual_destructor virtual_destructor.cpp)
+set_target_properties(virtual_destructor PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
+
+add_executable(move move.cpp)
+set_target_properties(move PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
