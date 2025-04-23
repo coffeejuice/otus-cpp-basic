@@ -1,12 +1,12 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.30)
 
-project(guess_project LANGUAGES CXX)
+project(containers)
 
-add_executable(guess_project
-	guess_the_number.cpp
-	guess_funcs.hpp
-	guess_funcs.cpp
+add_executable(containers main.cpp)
+
+set_target_properties(
+        containers
+        PROPERTIES
+        CXX_STANDARD 17
+        CXX_STANDARD_REQUIRED ON
 )
-
-target_compile_features(guess_project PUBLIC cxx_std_17)
-target_compile_options(guess_project PUBLIC /W4 /WX)
