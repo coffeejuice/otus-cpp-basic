@@ -1,4 +1,6 @@
 #include <iostream>
+#include <algorithm> // for std::max
+#include <cmath>     // for std::ceil
 
 template<typename T>
 class DynamicSequenceContainer {
@@ -7,45 +9,32 @@ public:
     }
 
     void push_back(T value) {
-        T *new_region_ptr = new T[m_size + 1];
-        for (size_t i = 0; i < m_size; ++i) {
-            new_region_ptr[i] = m_data_ptr[i];
-        }
-        new_region_ptr[m_size] = value;
-        delete[] m_data_ptr;
-        m_data_ptr = new_region_ptr;
-        ++m_size;
+        increase_size_then_insert(m_data_size, value);
     }
 
     void insert(const size_t index, T value) {
-        T *new_region_ptr = new T[m_size + 1];
-        for (size_t i = 0; i < index; ++i) {
-            new_region_ptr[i] = m_data_ptr[i];
-        }
-        new_region_ptr[index] = value;
-        for (size_t i = index; i < m_size; ++i) {
-            new_region_ptr[i + 1] = m_data_ptr[i];
-        }
-        delete[] m_data_ptr;
-        m_data_ptr = new_region_ptr;
-        ++m_size;
+        const size_t corrected_index = index > m_data_size ? m_data_size : index;
+        increase_size_then_isnert(corrected_index, value);
     }
 
+
     void erase(const size_t index) {
-        T *new_region_ptr = new T[m_size - 1];
+        size_t optimal_min_size = static_cast<size_t>(std::floor(m_data_size / 1.5));
+
+        T *new_region_ptr = new T[m_data_size - 1];
         for (size_t i = 0; i < index; ++i) {
             new_region_ptr[i] = m_data_ptr[i];
         }
-        for (size_t i = index + 1; i < m_size; ++i) {
+        for (size_t i = index + 1; i < m_data_size; ++i) {
             new_region_ptr[i - 1] = m_data_ptr[i];
         }
         delete[] m_data_ptr;
         m_data_ptr = new_region_ptr;
-        --m_size;
+        --m_data_size;
     }
 
     [[nodiscard]] size_t size() const {
-        return m_size;
+        return m_data_size;
     }
 
     T &operator[](const size_t index) {
@@ -58,7 +47,48 @@ public:
 
 private:
     T *m_data_ptr;
-    size_t m_size{};
+    size_t m_data_size{};
+    size_t m_container_size{};
+
+
+    void increase_size_then_insert(size_t const index, T const value) {
+        // Push_back case AND container has empty space.
+        if (index >= m_data_size and m_container_size > m_data_size) {
+            // Do nothing. Exit.
+            return;
+        }
+
+        // Calculate new container size. At least as long as 2 items.
+        m_container_size = m_container_size < 2
+                               ? 2
+                               : static_cast<size_t>(std::ceil((m_data_size + 1) * 1.5));
+
+        // Increase container up to new size
+        T *new_region_ptr = new T[m_container_size];
+
+        // Move data.
+        if (index >= m_data_size) {
+            // Push_back case
+            for (size_t i = 0; i < m_data_size; ++i) {
+                new_region_ptr[i] = m_data_ptr[i];
+            }
+        } else {
+            // Insert case
+            for (size_t i = 0; i < index; ++i) {
+                new_region_ptr[i] = m_data_ptr[i];
+            }
+            for (size_t i = index; i < m_data_size; ++i) {
+                new_region_ptr[i + 1] = m_data_ptr[i];
+            }
+        }
+
+        delete[] m_data_ptr;
+        m_data_ptr = new_region_ptr;
+
+        m_data_ptr[index] = value;
+        ++m_data_size;
+    }
+
 };
 
 template<typename T>
