@@ -6,8 +6,77 @@ template <typename T>
 class DynamicSequenceContainer
 {
 public:
+    class Iterator
+    {
+    public:
+        Iterator(T* ptr) : m_ptr(ptr)
+        {
+        }
+
+        T& operator*() const { return *m_ptr; }
+        T* get() const { return m_ptr; }
+
+        // Pre-increment
+        Iterator& operator++()
+        {
+            m_ptr++;
+            return *this;
+        }
+
+        // Post-increment
+        Iterator operator++(int)
+        {
+            Iterator tmp = *this;
+            ++(*this);
+            return tmp;
+        }
+
+        // Comparison operators
+        friend bool operator==(const Iterator& a, const Iterator& b) { return a.m_ptr == b.m_ptr; }
+        friend bool operator!=(const Iterator& a, const Iterator& b) { return a.m_ptr != b.m_ptr; }
+
+    private:
+        T* m_ptr;
+    };
+
+    // Iterator methods
+    Iterator begin() { return Iterator(m_data_ptr); }
+    Iterator end() { return Iterator(m_data_ptr + m_data_size); }
+
+    // Const iterator methods
+    const Iterator begin() const { return Iterator(m_data_ptr); }
+    const Iterator end() const { return Iterator(m_data_ptr + m_data_size); }
+
     DynamicSequenceContainer() : m_data_ptr(nullptr)
     {
+    }
+
+    // Add destructor to deallocate memory
+    ~DynamicSequenceContainer()
+    {
+        delete[] m_data_ptr;
+    }
+
+    DynamicSequenceContainer<T>& operator=(DynamicSequenceContainer<T>&& other)
+    {
+        // Check for self-assignment (unlikely but still good practice)
+        if (this == &other)
+            return *this;
+
+        // Delete current resources
+        delete[] m_data_ptr;
+
+        // Move resources from other container
+        m_data_ptr = other.m_data_ptr;
+        m_data_size = other.m_data_size;
+        m_container_size = other.m_container_size;
+
+        // Reset other container to prevent double deletion
+        other.m_data_ptr = nullptr;
+        other.m_data_size = 0;
+        other.m_container_size = 0;
+
+        return *this;
     }
 
     void push_back(T value)
@@ -136,6 +205,45 @@ class DynamicTwoWayListContainer
 public:
     DynamicTwoWayListContainer() : m_head(nullptr), m_tail(nullptr)
     {
+    }
+
+    ~DynamicTwoWayListContainer()
+    {
+        NodeTwoWay<T>* current = m_head;
+        while (current != nullptr)
+        {
+            NodeTwoWay<T>* next = current->next;
+            delete current;
+            current = next;
+        }
+    }
+
+    DynamicTwoWayListContainer<T>& operator=(DynamicTwoWayListContainer<T>&& other) noexcept
+    {
+        // Check for self-assignment
+        if (this == &other)
+            return *this;
+
+        // Clean up existing resources
+        NodeTwoWay<T>* current = m_head;
+        while (current != nullptr)
+        {
+            NodeTwoWay<T>* next = current->next;
+            delete current;
+            current = next;
+        }
+
+        // Move resources from other container
+        m_head = other.m_head;
+        m_tail = other.m_tail;
+        m_size = other.m_size;
+
+        // Reset other container to prevent double deletion
+        other.m_head = nullptr;
+        other.m_tail = nullptr;
+        other.m_size = 0;
+
+        return *this;
     }
 
     void push_back(T value)
@@ -296,6 +404,45 @@ public:
     {
     }
 
+    ~DynamicSingleWayListContainer()
+    {
+        NodeSingleWay<T>* current = m_head;
+        while (current != nullptr)
+        {
+            NodeSingleWay<T>* next = current->next;
+            delete current;
+            current = next;
+        }
+    }
+
+    DynamicSingleWayListContainer<T>& operator=(DynamicSingleWayListContainer<T>&& other) noexcept
+    {
+        // Check for self-assignment
+        if (this == &other)
+            return *this;
+
+        // Clean up existing resources
+        NodeSingleWay<T>* current = m_head;
+        while (current != nullptr)
+        {
+            NodeSingleWay<T>* next = current->next;
+            delete current;
+            current = next;
+        }
+
+        // Move resources from other container
+        m_head = other.m_head;
+        m_tail = other.m_tail;
+        m_size = other.m_size;
+
+        // Reset other container to prevent double deletion
+        other.m_head = nullptr;
+        other.m_tail = nullptr;
+        other.m_size = 0;
+
+        return *this;
+    }
+
     void push_back(T value)
     {
         insert(m_size, value);
@@ -321,7 +468,7 @@ public:
         {
             // m_size > 0 and index > 0
             NodeSingleWay<T>* previous_node = get_node(index - 1);
-            NodeSingleWay<T>* current_node = previous_node->next;
+            NodeSingleWay<T>* next_node = previous_node->next;
             previous_node->next = new_node;
 
             if (index >= m_size)
@@ -331,7 +478,7 @@ public:
             }
             else
             {
-                new_node->next = current_node;
+                new_node->next = next_node;
             }
         }
         ++m_size;
@@ -344,29 +491,28 @@ public:
             return;
         }
 
-        NodeSingleWay<T>* previous_node = get_node(index - 1);
-
-        if (index == m_size - 1)
-        {
-            previous_node->next = nullptr;
-            delete m_tail;
-            m_tail = previous_node;
-        }
-
-        NodeSingleWay<T>* next_node = get_node(index + 1);
-
         if (index == 0)
         {
-            NodeSingleWay<T>* new_head = m_head->next;
-            delete m_head;
-            m_head = new_head;
+            NodeSingleWay<T>* node_to_be_removed = m_head;
+            m_head = m_head->next;
+            delete node_to_be_removed;
+        }
+        else if (index == m_size - 1)
+        {
+            NodeSingleWay<T>* previous_node = get_node(index - 1);
+            NodeSingleWay<T>* node_to_be_removed = previous_node->next;
+            previous_node->next = nullptr;
+            m_tail = previous_node;
+            delete node_to_be_removed;
         }
         else
         {
-            NodeSingleWay<T>* node_to_be_removed = next_node->prev;
-            next_node->prev = node_to_be_removed->prev;
+            NodeSingleWay<T>* previous_node = get_node(index - 1);
+            NodeSingleWay<T>* node_to_be_removed = previous_node->next;
+            previous_node->next = node_to_be_removed->next;
             delete node_to_be_removed;
         }
+
         --m_size;
     }
 
@@ -376,10 +522,10 @@ public:
         if (index == 0) return m_head;
         if (index >= m_size - 1) return m_tail;
 
-        auto current_node = m_tail;
-        for (size_t i = m_size - 2; i >= index; --i)
+        auto current_node = m_head;
+        for (size_t i = 1; i <= index; ++i)
         {
-            current_node = current_node->prev;
+            current_node = current_node->next;
         }
         return current_node;
     }
@@ -415,22 +561,40 @@ private:
     NodeSingleWay<T>* m_tail;
 };
 
+// template <typename T>
+// void disp_content(const T& container)
+// {
+//     std::cout << container.name() << ":   ";
+//     const size_t c_size = container.size();
+//
+//     if (c_size == 0)
+//     {
+//         std::cout << "(empty)" << std::endl;
+//         return;
+//     }
+//     for (size_t i = 0; i < c_size - 1; ++i)
+//     {
+//         std::cout << container[i] << ", ";
+//     }
+//     std::cout << container[c_size - 1] << std::endl;
+// }
+
 template <typename T>
 void disp_content(const T& container)
 {
     std::cout << container.name() << ":   ";
-    const size_t c_size = container.size();
 
-    if (c_size == 0)
+    if (!container.size())
     {
         std::cout << "(empty)" << std::endl;
         return;
     }
-    for (size_t i = 0; i < c_size - 1; ++i)
+
+    for (auto iter=container.begin(); iter!=container.end(); ++iter)
     {
-        std::cout << container[i] << ", ";
+        std::cout << iter.get() << ", ";
     }
-    std::cout << container[c_size - 1] << std::endl;
+    std::cout  << std::endl;
 }
 
 // Partial specialization of disp_content for DynamicListContainer
@@ -447,6 +611,39 @@ void disp_content(const DynamicTwoWayListContainer<T>& container)
     }
 
     NodeTwoWay<T>* current = container.get_head();
+
+    for (size_t i = 0; i < c_size - 1; ++i)
+    {
+        std::cout << current->data << ", ";
+        if (current->next)
+        {
+            current = current->next;
+        }
+        else
+        {
+            std::cout << "ERR" << std::endl;
+            return;
+        }
+    }
+
+    // Print the last element without a comma
+    std::cout << current->data << std::endl;
+}
+
+// Partial specialization of disp_content for DynamicSingleWayListContainer
+template <typename T>
+void disp_content(const DynamicSingleWayListContainer<T>& container)
+{
+    std::cout << container.name() << ": ";
+    const size_t c_size = container.size();
+
+    if (c_size == 0)
+    {
+        std::cout << "(empty)" << std::endl;
+        return;
+    }
+
+    NodeSingleWay<T>* current = container.get_head();
 
     for (size_t i = 0; i < c_size - 1; ++i)
     {
