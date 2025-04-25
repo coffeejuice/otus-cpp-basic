@@ -3,18 +3,18 @@
 #include <cmath>     // for std::ceil
 
 template <typename T>
-class DynamicSequenceContainer
+class Sequence
 {
 public:
     class Iterator
     {
     public:
-        Iterator(T* ptr) : m_ptr(ptr)
+        explicit Iterator(T* ptr) : m_ptr(ptr)
         {
         }
 
         T& operator*() const { return *m_ptr; }
-        T* get() const { return m_ptr; }
+        [[nodiscard]] T& get() const { return *m_ptr; }
 
         // Pre-increment
         Iterator& operator++()
@@ -47,17 +47,77 @@ public:
     const Iterator begin() const { return Iterator(m_data_ptr); }
     const Iterator end() const { return Iterator(m_data_ptr + m_data_size); }
 
-    DynamicSequenceContainer() : m_data_ptr(nullptr)
+    Sequence() : m_data_ptr(nullptr)
     {
     }
 
     // Add destructor to deallocate memory
-    ~DynamicSequenceContainer()
+    ~Sequence()
     {
         delete[] m_data_ptr;
     }
 
-    DynamicSequenceContainer<T>& operator=(DynamicSequenceContainer<T>&& other)
+    // Copy
+    Sequence(const Sequence& other) : Sequence{other.data()}
+    {
+    }
+
+    // Move
+    Sequence(const Sequence&& other) noexcept
+    {
+        // Check for self-assignment (unlikely but still good practice)
+        if (this == &other)
+            return;
+
+        // Delete current resources
+        delete[] m_data_ptr;
+
+        // Move resources from other container
+        m_data_ptr = other.m_data_ptr;
+        m_data_size = other.m_data_size;
+        m_container_size = other.m_container_size;
+
+        // Reset other container to prevent double deletion
+        other.m_data_ptr = nullptr;
+        other.m_data_size = 0;
+        other.m_container_size = 0;
+    }
+
+    // Copy assignment
+    Sequence& operator=(const Sequence& other)
+    {
+        // Check for self-assignment
+        if (this == &other)
+            return *this;
+
+        // Delete current resources
+        delete[] m_data_ptr;
+
+        // Copy size information
+        m_data_size = other.m_data_size;
+        m_container_size = other.m_container_size;
+
+        // Allocate new memory
+        if (m_container_size > 0)
+        {
+            m_data_ptr = new T[m_container_size];
+
+            // Copy data from other container
+            for (size_t i = 0; i < m_data_size; ++i)
+            {
+                m_data_ptr[i] = other.m_data_ptr[i];
+            }
+        }
+        else
+        {
+            m_data_ptr = nullptr;
+        }
+
+        return *this;
+    }
+
+    // Move
+    Sequence& operator=(Sequence&& other) noexcept
     {
         // Check for self-assignment (unlikely but still good practice)
         if (this == &other)
@@ -158,25 +218,15 @@ public:
         --m_data_size;
     }
 
-    [[nodiscard]] size_t size() const
-    {
-        return m_data_size;
-    }
+    [[nodiscard]] T* data() const { return m_data_ptr; }
 
-    T& operator[](const size_t index)
-    {
-        return m_data_ptr[index];
-    }
+    [[nodiscard]] size_t size() const { return m_data_size; }
 
-    const T& operator[](const size_t index) const
-    {
-        return m_data_ptr[index];
-    }
+    T& operator[](const size_t index) { return m_data_ptr[index]; }
 
-    static const char* name()
-    {
-        return "DynamicSequenceContainer";
-    }
+    const T& operator[](const size_t index) const { return m_data_ptr[index]; }
+
+    static const char* name() { return "DynamicSequenceContainer"; }
 
 private:
     T* m_data_ptr;
@@ -184,59 +234,99 @@ private:
     size_t m_container_size{};
 };
 
+// Base node template with a "next" pointer
+template <typename T, typename NodeDerived>
+struct NodeBase {
+    T data;
+    NodeDerived* next;
+    
+    NodeBase(T value) : data(value), next(nullptr) {}
+};
+
+// Single-linked node (essentially identical to base)
 template <typename T>
-struct NodeTwoWay
-{
-    T data; // value
-    NodeTwoWay* prev; // pointer to previous Node
-    NodeTwoWay* next; // pointer to next Node
+struct Node1 : NodeBase<T, Node1<T>> {
+    explicit Node1(T value) : NodeBase<T, Node1>(value) {}
+};
+
+// Double-linked node with additional prev pointer
+template <typename T>
+struct Node2 : NodeBase<T, Node2<T>> {
+    Node2* prev;
+    
+    explicit Node2(T value) : NodeBase<T, Node2>(value), prev(nullptr) {}
 };
 
 template <typename T>
-struct NodeSingleWay
-{
-    T data; // value
-    NodeSingleWay* next; // pointer to next Node
+class ListBase {
+public:
+    class Iterator {
+    public:
+        explicit Iterator(NodeBase<T, Node2<T>>* ptr) : m_ptr(ptr) {}
+        
+        T& operator*() const { return m_ptr->data; }
+        [[nodiscard]] T& get() const { return m_ptr->data; }
+        
+        // Pre-increment
+        Iterator& operator++() {
+            m_ptr = m_ptr->next;
+            return *this;
+        }
+
+    protected:
+        NodeBase<T, Node2<T>>* m_ptr;
+    };
+    
+    // No longer need virtual for these methods!
+    Iterator begin() { return Iterator(static_cast<NodeBase<T, Node2<T>>*>(m_head)); }
+    Iterator end() { return Iterator(nullptr); }
+    
+    // Other methods that remain virtual...
+    virtual void push_back(T value) = 0;
+    virtual void insert(const size_t index, T value) = 0;
+    // ...
+
+protected:
+    NodeBase<T, Node2<T>>* m_head{nullptr};
+    NodeBase<T, Node2<T>>* m_tail{nullptr};
+    size_t m_size{0};
 };
 
 template <typename T>
-class DynamicTwoWayListContainer
+class List2 : public ListBase<T>
 {
 public:
-    DynamicTwoWayListContainer() : m_head(nullptr), m_tail(nullptr)
+    class Iterator : public ListBase<T>::Iterator
     {
-    }
-
-    ~DynamicTwoWayListContainer()
-    {
-        NodeTwoWay<T>* current = m_head;
-        while (current != nullptr)
+    public:
+        explicit Iterator(Node2<T>* ptr) : ListBase<T>::Iterator(ptr)
         {
-            NodeTwoWay<T>* next = current->next;
-            delete current;
-            current = next;
         }
+    };
+
+    List2()
+    {
     }
 
-    DynamicTwoWayListContainer<T>& operator=(DynamicTwoWayListContainer<T>&& other) noexcept
+    List2& operator=(List2&& other) noexcept
     {
         // Check for self-assignment
         if (this == &other)
             return *this;
 
         // Clean up existing resources
-        NodeTwoWay<T>* current = m_head;
+        Node2<T>* current = static_cast<Node2<T>*>(this->m_head);
         while (current != nullptr)
         {
-            NodeTwoWay<T>* next = current->next;
+            Node2<T>* next = static_cast<Node2<T>*>(current->next);
             delete current;
             current = next;
         }
 
         // Move resources from other container
-        m_head = other.m_head;
-        m_tail = other.m_tail;
-        m_size = other.m_size;
+        this->m_head = other.m_head;
+        this->m_tail = other.m_tail;
+        this->m_size = other.m_size;
 
         // Reset other container to prevent double deletion
         other.m_head = nullptr;
@@ -246,46 +336,43 @@ public:
         return *this;
     }
 
-    void push_back(T value)
+    void push_back(T value) override
     {
-        auto* new_tail = new NodeTwoWay<T>{};
-        new_tail->data = value;
-        new_tail->next = nullptr;
+        auto* new_tail = new Node2<T>(value);
 
-        if (m_size)
+        if (this->m_size)
         {
             // a container has one or more items
-            NodeTwoWay<T>* old_tail = m_tail;
+            Node2<T>* old_tail = static_cast<Node2<T>*>(this->m_tail);
             new_tail->prev = old_tail;
             old_tail->next = new_tail;
         }
         else
         {
             new_tail->prev = nullptr;
-            m_head = new_tail;
+            this->m_head = new_tail;
         }
-        m_tail = new_tail;
-        ++m_size;
+        this->m_tail = new_tail;
+        ++this->m_size;
     }
 
-    void insert(const size_t index, T value)
+    void insert(const size_t index, T value) override
     {
-        if (index >= m_size)
+        if (index >= this->m_size)
         {
             push_back(value);
             return;
         }
-        NodeTwoWay<T>* old_node = get_node(index);
-        NodeTwoWay<T>* previous_node = old_node->prev;
-        NodeTwoWay<T>* new_node = new NodeTwoWay<T>{};
+        Node2<T>* old_node = static_cast<Node2<T>*>(get_node(index));
+        Node2<T>* previous_node = old_node->prev;
+        Node2<T>* new_node = new Node2<T>(value);
 
-        new_node->data = value;
         new_node->prev = old_node->prev;
         new_node->next = old_node;
 
         if (index == 0)
         {
-            m_head = new_node;
+            this->m_head = new_node;
         }
         else
         {
@@ -294,59 +381,59 @@ public:
 
         old_node->prev = new_node;
 
-        ++m_size;
+        ++this->m_size;
     }
 
-    void erase(const size_t index)
+    void erase(const size_t index) override
     {
-        if (m_size == 0 or index >= m_size)
+        if (this->m_size == 0 or index >= this->m_size)
         {
             return;
         }
         if (index == 0)
         {
-            NodeTwoWay<T>* new_head = m_head->next;
+            Node2<T>* new_head = static_cast<Node2<T>*>(this->m_head->next);
             new_head->prev = nullptr;
-            delete m_head;
-            m_head = new_head;
+            delete this->m_head;
+            this->m_head = new_head;
         }
-        else if (index == m_size - 1)
+        else if (index == this->m_size - 1)
         {
-            NodeTwoWay<T>* new_tail = m_tail->prev;
+            Node2<T>* new_tail = static_cast<Node2<T>*>(this->m_tail->prev);
             new_tail->next = nullptr;
-            delete m_tail;
-            m_tail = new_tail;
+            delete this->m_tail;
+            this->m_tail = new_tail;
         }
         else
         {
-            NodeTwoWay<T>* node_to_be_removed = get_node(index);
+            Node2<T>* node_to_be_removed = static_cast<Node2<T>*>(get_node(index));
             node_to_be_removed->prev->next = node_to_be_removed->next;
             node_to_be_removed->next->prev = node_to_be_removed->prev;
             delete node_to_be_removed;
         }
-        --m_size;
+        --this->m_size;
     }
 
-    [[nodiscard]] NodeTwoWay<T>* get_node(const size_t index) const
+    [[nodiscard]] NodeBase<T, Node2<T>>* get_node(const size_t index) const override
     {
-        if (m_size == 0)
+        if (this->m_size == 0)
         {
             return nullptr;
         }
         if (index == 0)
         {
             // std::cout << "H";
-            return m_head;
+            return this->m_head;
         }
-        if (index >= m_size - 1)
+        if (index >= this->m_size - 1)
         {
             // std::cout << "T";
-            return m_tail;
+            return this->m_tail;
         }
-        const auto half_index = static_cast<size_t>(m_size / 2.0);
-        if (m_size < 5 or index < half_index)
+        const auto half_index = static_cast<size_t>(this->m_size / 2.0);
+        if (this->m_size < 5 or index < half_index)
         {
-            auto current_node = m_head;
+            auto current_node = this->m_head;
             for (size_t i = 1; i <= index; ++i)
             {
                 current_node = current_node->next;
@@ -354,8 +441,8 @@ public:
             // std::cout << "F(" << index << "-" << current_node << ")";
             return current_node;
         }
-        auto current_node = m_tail;
-        for (size_t i = m_size - 2; i >= index; --i)
+        auto current_node = this->m_tail;
+        for (size_t i = this->m_size - 2; i >= index; --i)
         {
             current_node = current_node->prev;
         }
@@ -363,77 +450,50 @@ public:
         return current_node;
     }
 
-    T& operator[](const size_t index)
-    {
-        return get_node(index)->data;
-    }
+    T& operator[](const size_t index) override { return static_cast<Node2<T>*>(get_node(index))->data;}
 
-    const T& operator[](const size_t index) const
-    {
-        return get_node(index)->data;
-    }
+    const T& operator[](const size_t index) const override { return static_cast<Node2<T>*>(get_node(index))->data;}
 
-    [[nodiscard]] size_t size() const
-    {
-        return m_size;
-    }
-
-    [[nodiscard]] NodeTwoWay<T>* get_head() const
-    {
-        return m_head;
-    }
-
-    static const char* name()
-    {
-        return "DynamicTwoWayListContainer";
-    }
-
-private:
-    size_t m_size{};
-    NodeTwoWay<T>* m_head;
-    NodeTwoWay<T>* m_tail;
+    static const char* name() { return "DynamicTwoWayListContainer";}
 };
 
 #include <string>
 
 template <typename T>
-class DynamicSingleWayListContainer
+class List1 : public ListBase<T>
 {
 public:
-    DynamicSingleWayListContainer() : m_head(nullptr), m_tail(nullptr)
+    class Iterator : public ListBase<T>::Iterator
     {
-    }
-
-    ~DynamicSingleWayListContainer()
-    {
-        NodeSingleWay<T>* current = m_head;
-        while (current != nullptr)
+    public:
+        explicit Iterator(Node1<T>* ptr) : ListBase<T>::Iterator(ptr)
         {
-            NodeSingleWay<T>* next = current->next;
-            delete current;
-            current = next;
         }
+    };
+
+    List1()
+    {
     }
 
-    DynamicSingleWayListContainer<T>& operator=(DynamicSingleWayListContainer<T>&& other) noexcept
+    List1<T>& operator=(List1<T>&& other) noexcept
     {
         // Check for self-assignment
         if (this == &other)
             return *this;
 
         // Clean up existing resources
-        NodeSingleWay<T>* current = m_head;
+        Node1<T>* current = static_cast<Node1<T>*>(this->m_head);
         while (current != nullptr)
         {
-            NodeSingleWay<T>* next = current->next;
+            Node1<T>* next = static_cast<Node1<T>*>(current->next);
             delete current;
             current = next;
         }
 
         // Move resources from other container
-        m_head = other.m_head;
-        m_tail = other.m_tail;
-        m_size = other.m_size;
+        this->m_head = other.m_head;
+        this->m_tail = other.m_tail;
+        this->m_size = other.m_size;
 
         // Reset other container to prevent double deletion
         other.m_head = nullptr;
@@ -443,86 +503,85 @@ public:
         return *this;
     }
 
-    void push_back(T value)
+    void push_back(T value) override
     {
-        insert(m_size, value);
+        insert(this->m_size, value);
     }
 
-    void insert(const size_t index, T value)
+    void insert(const size_t index, T value) override
     {
-        auto* new_node = new NodeSingleWay<T>{};
-        new_node->data = value;
+        auto* new_node = new Node1<T>(value);
 
-        if (m_size == 0)
+        if (this->m_size == 0)
         {
             new_node->next = nullptr;
-            m_head = new_node;
-            m_tail = new_node;
+            this->m_head = new_node;
+            this->m_tail = new_node;
         }
         else if (index == 0)
         {
-            new_node->next = m_head;
-            m_head = new_node;
+            new_node->next = this->m_head;
+            this->m_head = new_node;
         }
         else
         {
             // m_size > 0 and index > 0
-            NodeSingleWay<T>* previous_node = get_node(index - 1);
-            NodeSingleWay<T>* next_node = previous_node->next;
+            Node1<T>* previous_node = static_cast<Node1<T>*>(get_node(index - 1));
+            Node1<T>* next_node = static_cast<Node1<T>*>(previous_node->next);
             previous_node->next = new_node;
 
-            if (index >= m_size)
+            if (index >= this->m_size)
             {
                 new_node->next = nullptr;
-                m_tail = new_node;
+                this->m_tail = new_node;
             }
             else
             {
                 new_node->next = next_node;
             }
         }
-        ++m_size;
+        ++this->m_size;
     }
 
-    void erase(const size_t index)
+    void erase(const size_t index) override
     {
-        if (m_size == 0 or index >= m_size)
+        if (this->m_size == 0 or index >= this->m_size)
         {
             return;
         }
 
         if (index == 0)
         {
-            NodeSingleWay<T>* node_to_be_removed = m_head;
-            m_head = m_head->next;
+            Node1<T>* node_to_be_removed = static_cast<Node1<T>*>(this->m_head);
+            this->m_head = this->m_head->next;
             delete node_to_be_removed;
         }
-        else if (index == m_size - 1)
+        else if (index == this->m_size - 1)
         {
-            NodeSingleWay<T>* previous_node = get_node(index - 1);
-            NodeSingleWay<T>* node_to_be_removed = previous_node->next;
+            Node1<T>* previous_node = static_cast<Node1<T>*>(get_node(index - 1));
+            Node1<T>* node_to_be_removed = static_cast<Node1<T>*>(previous_node->next);
             previous_node->next = nullptr;
-            m_tail = previous_node;
+            this->m_tail = previous_node;
             delete node_to_be_removed;
         }
         else
         {
-            NodeSingleWay<T>* previous_node = get_node(index - 1);
-            NodeSingleWay<T>* node_to_be_removed = previous_node->next;
+            Node1<T>* previous_node = static_cast<Node1<T>*>(get_node(index - 1));
+            Node1<T>* node_to_be_removed = static_cast<Node1<T>*>(previous_node->next);
             previous_node->next = node_to_be_removed->next;
             delete node_to_be_removed;
         }
 
-        --m_size;
+        --this->m_size;
     }
 
-    [[nodiscard]] NodeSingleWay<T>* get_node(const size_t index) const
+    [[nodiscard]] NodeBase<T, Node2<T>>* get_node(const size_t index) const override
     {
-        if (m_size == 0) return nullptr;
-        if (index == 0) return m_head;
-        if (index >= m_size - 1) return m_tail;
+        if (this->m_size == 0) return nullptr;
+        if (index == 0) return this->m_head;
+        if (index >= this->m_size - 1) return this->m_tail;
 
-        auto current_node = m_head;
+        auto current_node = this->m_head;
         for (size_t i = 1; i <= index; ++i)
         {
             current_node = current_node->next;
@@ -530,54 +589,12 @@ public:
         return current_node;
     }
 
-    T& operator[](const size_t index)
-    {
-        return get_node(index)->data;
-    }
+    T& operator[](const size_t index) override { return static_cast<Node1<T>*>(get_node(index))->data;}
 
-    const T& operator[](const size_t index) const
-    {
-        return get_node(index)->data;
-    }
+    const T& operator[](const size_t index) const override { return static_cast<Node1<T>*>(get_node(index))->data;}
 
-    [[nodiscard]] size_t size() const
-    {
-        return m_size;
-    }
-
-    [[nodiscard]] NodeSingleWay<T>* get_head() const
-    {
-        return m_head;
-    }
-
-    static const char* name()
-    {
-        return "DynamicSingleWayListContainer";
-    }
-
-private:
-    size_t m_size{};
-    NodeSingleWay<T>* m_head;
-    NodeSingleWay<T>* m_tail;
+    static const char* name() { return "DynamicSingleWayListContainer";}
 };
-
-// template <typename T>
-// void disp_content(const T& container)
-// {
-//     std::cout << container.name() << ":   ";
-//     const size_t c_size = container.size();
-//
-//     if (c_size == 0)
-//     {
-//         std::cout << "(empty)" << std::endl;
-//         return;
-//     }
-//     for (size_t i = 0; i < c_size - 1; ++i)
-//     {
-//         std::cout << container[i] << ", ";
-//     }
-//     std::cout << container[c_size - 1] << std::endl;
-// }
 
 template <typename T>
 void disp_content(const T& container)
@@ -590,79 +607,12 @@ void disp_content(const T& container)
         return;
     }
 
-    for (auto iter=container.begin(); iter!=container.end(); ++iter)
+    for (auto iter = container.begin(); iter != container.end(); ++iter)
     {
         std::cout << iter.get() << ", ";
     }
-    std::cout  << std::endl;
+    std::cout << std::endl;
 }
-
-// Partial specialization of disp_content for DynamicListContainer
-template <typename T>
-void disp_content(const DynamicTwoWayListContainer<T>& container)
-{
-    std::cout << container.name() << ": ";
-    const size_t c_size = container.size();
-
-    if (c_size == 0)
-    {
-        std::cout << "(empty)" << std::endl;
-        return;
-    }
-
-    NodeTwoWay<T>* current = container.get_head();
-
-    for (size_t i = 0; i < c_size - 1; ++i)
-    {
-        std::cout << current->data << ", ";
-        if (current->next)
-        {
-            current = current->next;
-        }
-        else
-        {
-            std::cout << "ERR" << std::endl;
-            return;
-        }
-    }
-
-    // Print the last element without a comma
-    std::cout << current->data << std::endl;
-}
-
-// Partial specialization of disp_content for DynamicSingleWayListContainer
-template <typename T>
-void disp_content(const DynamicSingleWayListContainer<T>& container)
-{
-    std::cout << container.name() << ": ";
-    const size_t c_size = container.size();
-
-    if (c_size == 0)
-    {
-        std::cout << "(empty)" << std::endl;
-        return;
-    }
-
-    NodeSingleWay<T>* current = container.get_head();
-
-    for (size_t i = 0; i < c_size - 1; ++i)
-    {
-        std::cout << current->data << ", ";
-        if (current->next)
-        {
-            current = current->next;
-        }
-        else
-        {
-            std::cout << "ERR" << std::endl;
-            return;
-        }
-    }
-
-    // Print the last element without a comma
-    std::cout << current->data << std::endl;
-}
-
 
 template <typename T>
 void container_test(T& container)
@@ -717,14 +667,14 @@ void container_test(T& container)
 int main()
 {
     std::cout << "Sequence container test:" << std::endl;
-    DynamicSequenceContainer<int> s_container;
+    Sequence<int> s_container;
     container_test(s_container);
 
     std::cout << std::endl << "\nTwo-Way List container test:" << std::endl;
-    DynamicTwoWayListContainer<int> l_2_container;
+    List2<int> l_2_container;
     container_test(l_2_container);
 
     std::cout << std::endl << "\nSingle-Way List container test:" << std::endl;
-    DynamicSingleWayListContainer<int> l_1_container;
+    List1<int> l_1_container;
     container_test(l_1_container);
 }
