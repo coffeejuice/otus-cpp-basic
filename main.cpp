@@ -74,20 +74,55 @@ void container_test(T& container)
     // 12. Display the container contents on the screen
     //     Expected result: 10, 0, 1, 3, 20, 5, 7, 8, 9, 30
     disp_content(container);
+
+    // Tests for special member functions
+    std::cout << "\n=== Copy constructor test ===\n";
+    T copy_constructed(container);  // Test copy constructor
+    std::cout << "Original: ";
+    disp_content(container);
+    std::cout << "Copy    : ";
+    disp_content(copy_constructed);
+
+    std::cout << "\n=== Move constructor test ===\n";
+    T temp_container = container;  // Make a copy to move from
+    T move_constructed(std::move(temp_container));  // Test move constructor
+    std::cout << "Original (after move): ";
+    disp_content(temp_container);  // Should be empty
+    std::cout << "Moved to: ";
+    disp_content(move_constructed);
+
+    std::cout << "\n=== Copy assignment test ===\n";
+    T copy_assigned;
+    copy_assigned = container;  // Test copy assignment
+    std::cout << "Original: ";
+    disp_content(container);
+    std::cout << "Copied to: ";
+    disp_content(copy_assigned);
+
+    std::cout << "\n=== Move assignment test ===\n";
+    T temp_container2 = container;  // Make a copy to move from
+    T move_assigned;
+    move_assigned = std::move(temp_container2);  // Test move assignment
+    std::cout << "Original (after move): ";
+    disp_content(temp_container2);  // Should be empty
+    std::cout << "Moved to: ";
+    disp_content(move_assigned);
+
+
 }
 
 
 int main()
 {
-    std::cout << "\nSequence container test:" << std::endl;
+    std::cout << std::endl << Sequence<int>::name() << " Test:" << std::endl;
     Sequence<int> s_container;
     container_test(s_container);
 
-    std::cout << std::endl << "\nDouble linked List container test:" << std::endl;
+    std::cout << std::endl << List2<int>::name() << " Test:" << std::endl;
     List2<int> l_2_container;
     container_test(l_2_container);
 
-    std::cout << std::endl << "\nSingle linked List container test:" << std::endl;
+    std::cout << std::endl << List2<int>::name() << " Test:" << std::endl;
     List1<int> l_1_container;
     container_test(l_1_container);
 }

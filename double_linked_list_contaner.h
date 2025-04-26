@@ -3,9 +3,12 @@
 template <typename T>
 struct Node2
 {
-    T data; // value
-    Node2* prev; // pointer to previous Node
-    Node2* next; // pointer to next Node
+    T data;
+    Node2* prev;
+    Node2* next;
+    
+    Node2() : data(), prev(nullptr), next(nullptr) {}
+    explicit Node2(const T& value) : data(value), prev(nullptr), next(nullptr) {}
 };
 
 template <typename T>
@@ -82,13 +85,8 @@ public:
     }
 
     // Move constructor
-    List2(const List2<T>&& other): m_head(nullptr), m_tail(nullptr)
+    List2(List2<T>&& other) noexcept : m_size(other.m_size), m_head(other.m_head), m_tail(other.m_tail)
     {
-        // Move resources from other container
-        m_head = other.m_head;
-        m_tail = other.m_tail;
-        m_size = other.m_size;
-
         // Reset other container to prevent double deletion
         other.m_head = nullptr;
         other.m_tail = nullptr;
@@ -96,7 +94,7 @@ public:
     }
 
     // Copy assignment
-    List2<T>& operator=(List2<T>& other) noexcept
+    List2<T>& operator=(const List2<T>& other) noexcept
     {
         // Check for self-assignment
         if (this == &other)
@@ -204,30 +202,53 @@ public:
 
     void erase(const size_t index)
     {
-        if (m_size == 0 or index >= m_size)
+        if (m_size == 0 || index >= m_size)
         {
             return;
         }
+
+        if (m_size == 1)
+        {
+            delete m_head;
+            m_head = nullptr;
+            m_tail = nullptr;
+            m_size = 0;
+            return;
+        }
+
         if (index == 0)
         {
             Node2<T>* new_head = m_head->next;
-            new_head->prev = nullptr;
+            if (new_head)
+            {
+                new_head->prev = nullptr;
+            }
             delete m_head;
             m_head = new_head;
         }
         else if (index == m_size - 1)
         {
             Node2<T>* new_tail = m_tail->prev;
-            new_tail->next = nullptr;
+            if (new_tail)
+            {
+                new_tail->next = nullptr;
+            }
             delete m_tail;
             m_tail = new_tail;
         }
         else
         {
             Node2<T>* node_to_be_removed = get_node(index);
-            node_to_be_removed->prev->next = node_to_be_removed->next;
-            node_to_be_removed->next->prev = node_to_be_removed->prev;
+            if (node_to_be_removed->prev)
+            {
+                node_to_be_removed->prev->next = node_to_be_removed->next;
+            }
+            if (node_to_be_removed->next)
+            {
+                node_to_be_removed->next->prev = node_to_be_removed->prev;
+            }
             delete node_to_be_removed;
+
         }
         --m_size;
     }
@@ -290,7 +311,7 @@ public:
 
     static const char* name()
     {
-        return "DynamicTwoWayListContainer";
+        return "Double linked List type container";
     }
 
 private:

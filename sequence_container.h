@@ -58,25 +58,21 @@ public:
     }
 
     // Copy constructor
-    Sequence(const Sequence& other) : Sequence{other.data()}
-    {
+    Sequence(const Sequence& other) : m_data_ptr(nullptr), m_data_size(other.m_data_size), m_container_size(other.m_container_size) {
+        if (m_container_size > 0) {
+            m_data_ptr = new T[m_container_size];
+            for (size_t i = 0; i < m_data_size; ++i) {
+                m_data_ptr[i] = other.m_data_ptr[i];
+            }
+        }
     }
 
     // Move constructor
-    Sequence(const Sequence&& other) noexcept
+    Sequence(Sequence&& other) noexcept :
+        m_data_ptr(other.m_data_ptr),
+        m_data_size(other.m_data_size),
+        m_container_size(other.m_container_size)
     {
-        // Check for self-assignment (unlikely but still good practice)
-        if (this == &other)
-            return;
-
-        // Delete current resources
-        delete[] m_data_ptr;
-
-        // Move resources from other container
-        m_data_ptr = other.m_data_ptr;
-        m_data_size = other.m_data_size;
-        m_container_size = other.m_container_size;
-
         // Reset other container to prevent double deletion
         other.m_data_ptr = nullptr;
         other.m_data_size = 0;
@@ -226,7 +222,7 @@ public:
 
     const T& operator[](const size_t index) const { return m_data_ptr[index]; }
 
-    static const char* name() { return "DynamicSequenceContainer"; }
+    static const char* name() { return "Sequence type container"; }
 
 private:
     T* m_data_ptr;
