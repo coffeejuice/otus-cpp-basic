@@ -1,12 +1,11 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.5)
 
-project(guess_project LANGUAGES CXX)
+project(12.unittests)
 
-add_executable(guess_project
-	guess_the_number.cpp
-	guess_funcs.hpp
-	guess_funcs.cpp
-)
+add_executable(bad_example bad_example.cpp)
+set_target_properties(bad_example PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
 
-target_compile_features(guess_project PUBLIC cxx_std_17)
-target_compile_options(guess_project PUBLIC /W4 /WX)
+add_executable(better_example better_example.cpp)
+set_target_properties(better_example PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
+
+add_subdirectory(much_better)
