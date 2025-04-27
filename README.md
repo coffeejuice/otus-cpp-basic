@@ -71,6 +71,12 @@ OTUS C++ Basic traning by Aleksandr Troshin
 > git submodule update --remote
 > ```
 
+> ## When cloning repo with Google Testing Framework do following
+> ```bash
+> git submodule update --init --recursive
+> ```
+
+
 
 > ## References 
 > ```c++
