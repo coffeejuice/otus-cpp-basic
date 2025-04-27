@@ -63,6 +63,15 @@ OTUS C++ Basic traning by Aleksandr Troshin
 > - [Install CMake](https://cmake.org/download/)
 
 
+> ## Connecting Google Testing Framework using Git
+> ```bash
+> git submodule init
+> git submodule add https://github.com/google/googletest googletest
+> git config -f .gitmodules submodule.googletest.branch v1.13.x
+> git submodule update --remote
+> ```
+
+
 > ## References 
 > ```c++
 > void swap(int& i, int& j)
