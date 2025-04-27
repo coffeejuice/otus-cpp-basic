@@ -18,6 +18,8 @@ OTUS C++ Basic traning by Aleksandr Troshin
 > - [isocpp.org: What is a reference?](https://isocpp.org/wiki/faq/references)
 > - [Bost.Program_options - parsing command arguments](https://www.boost.org/doc/libs/1_58_0/doc/html/program_options.html)
 > - [Спецификация на ключевое слово virtual](https://en.cppreference.com/w/cpp/language/virtual)
+> - [Юнит-тестирование для чайников](https://habr.com/ru/post/169381/)
+> - [Статья: Google testing framework (gtest)](https://habr.com/ru/articles/119090/)
 
 > ## Git commands
 > ### Setup git on new PC
@@ -59,6 +61,21 @@ OTUS C++ Basic traning by Aleksandr Troshin
 
 > ## CMake setup
 > - [Install CMake](https://cmake.org/download/)
+
+
+> ## Connecting Google Testing Framework using Git
+> ```bash
+> git submodule init
+> git submodule add https://github.com/google/googletest googletest
+> git config -f .gitmodules submodule.googletest.branch v1.13.x
+> git submodule update --remote
+> ```
+
+> ## When cloning repo with Google Testing Framework do following
+> ```bash
+> git submodule update --init --recursive
+> ```
+
 
 
 > ## References 
