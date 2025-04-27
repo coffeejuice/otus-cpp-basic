@@ -27,6 +27,9 @@ add_executable(
         main
         src/main.cpp
         src/list.hpp
+        src/sequence_container.h
+        src/double_linked_list_container.h
+        src/single_linked_list_container.h
 )
 
 # Test target
