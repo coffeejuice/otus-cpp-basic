@@ -26,7 +26,6 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 add_executable(
         main
         src/main.cpp
-        src/list.hpp
         src/sequence_container.h
         src/double_linked_list_container.h
         src/single_linked_list_container.h
@@ -36,6 +35,7 @@ add_executable(
 add_executable(
         test_list
         test/test_list.cpp
+        test/sequence_test.cpp
 )
 
 # Add src to the include directories for the test target

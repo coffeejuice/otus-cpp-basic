@@ -1,6 +1,7 @@
 #pragma once
 #include <algorithm> // for std::max
 #include <cmath>     // for std::ceil
+// #include <iostream>  // for std::cout
 
 template <typename T>
 class Sequence
@@ -164,14 +165,14 @@ public:
             // Container needs to be increase in size before inserting a new value.
             //
             // Calculate a new container size. At least as long as 2 items.
-            const size_t old_container_size = m_container_size;
+            // const size_t old_container_size = m_container_size;
             const size_t new_container_size = m_container_size < 2
                                                   ? 2
                                                   : static_cast<size_t>(std::ceil((m_data_size + 1) * 1.5));
             m_container_size = new_container_size > m_container_size ? new_container_size : m_container_size;
 
-            std::cout << name() << ":   Increase container size from " << old_container_size << " to " << m_container_size <<
-                std::endl;
+            // std::cout << name() << ":   Increase container size from " << old_container_size << " to " << m_container_size <<
+            //     std::endl;
 
             // Increase container up to a new size
             T* new_region_ptr = new T[m_container_size];

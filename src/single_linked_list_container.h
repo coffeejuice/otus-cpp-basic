@@ -18,7 +18,7 @@ public:
         {
         }
 
-        T& operator*() const { return *m_ptr->data; }
+        T& operator*() const { return m_ptr->data; }  // Correct - returning the data member directly
         [[nodiscard]] T& get() const { return m_ptr->data; }
 
         // Pre-increment
