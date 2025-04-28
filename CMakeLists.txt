@@ -28,14 +28,23 @@ add_executable(
         src/main.cpp
         src/sequence_container.h
         src/double_linked_list_container.h
-        src/single_linked_list_container.h
 )
 
 # Test target
 add_executable(
         test_list
         test/test_list.cpp
+
+        # Main tests
         test/sequence_test.cpp
+        test/double_linked_list_tests.cpp
+
+        # Additional test of std::vector
+        test/std_vector_tests.cpp
+
+        # Auxiliary code
+        test/fake_int_class.h
+        test/fake_int_class.cpp
 )
 
 # Add src to the include directories for the test target

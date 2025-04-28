@@ -253,6 +253,20 @@ public:
         --m_size;
     }
 
+    void clear()
+    {
+        Node2<T>* current = m_head;
+        while (current != nullptr)
+        {
+            Node2<T>* next = current->next;
+            delete current;
+            current = next;
+        }
+        m_head = nullptr;
+        m_tail = nullptr;
+        m_size = 0;
+    }
+
     [[nodiscard]] Node2<T>* get_node(const size_t index) const
     {
         if (m_size == 0)

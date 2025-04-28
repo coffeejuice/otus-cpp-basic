@@ -215,6 +215,14 @@ public:
         --m_data_size;
     }
 
+    void clear()
+    {
+        delete[] m_data_ptr;
+        m_data_ptr = nullptr;
+        m_data_size = 0;
+        m_container_size = 0;
+    }
+
     [[nodiscard]] T* data() const { return m_data_ptr; }
 
     [[nodiscard]] size_t size() const { return m_data_size; }
