@@ -20,6 +20,7 @@ OTUS C++ Basic traning by Aleksandr Troshin
 > - [Спецификация на ключевое слово virtual](https://en.cppreference.com/w/cpp/language/virtual)
 > - [Юнит-тестирование для чайников](https://habr.com/ru/post/169381/)
 > - [Статья: Google testing framework (gtest)](https://habr.com/ru/articles/119090/)
+> - [Алгоритм выбора STL-контейнера](https://habr.com/ru/companies/infopulse/articles/194726/)
 
 > ## Git commands
 > ### Setup git on new PC
