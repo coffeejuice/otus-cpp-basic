@@ -1,6 +1,7 @@
 # Folders
 /build/
 /cmake-build-debug/
+/src/static_library/build/
 /.idea/
 /.git/
 
