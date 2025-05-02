@@ -2,6 +2,8 @@
 /build/
 /cmake-build-debug/
 /src/static_library/build/
+/project_prebuilt_gtest/
+/project_prebuilt_gtest/googletest/
 /.idea/
 /.git/
 
