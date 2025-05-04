@@ -3,6 +3,7 @@
 /cmake-build-debug/
 /.idea/
 /.git/
+/.venv/
 
 # Choice
 *.ilk
@@ -40,4 +41,3 @@
 *.exe
 *.out
 *.app
-
