@@ -22,6 +22,9 @@ OTUS C++ Basic traning by Aleksandr Troshin
 > - [Статья: Google testing framework (gtest)](https://habr.com/ru/articles/119090/)
 > - [Алгоритм выбора STL-контейнера](https://habr.com/ru/companies/infopulse/articles/194726/)
 > - [Михаил Матросов. Алгоритмы и итераторы](https://www.youtube.com/watch?v=UUuO6ry33as)
+> - [Менеджер пакетов Conan для C++ проектов. Открытый вебинар OTUS](https://www.youtube.com/watch?v=Ny5BTWYHzWc)
+> - [The Conan - C/C++ package manager](https://conan.io/center)
+> - [VCPKG - C/C++ package manager](https://vcpkg.io/en/)
 
 > ## Git commands
 > ### Setup git on new PC
