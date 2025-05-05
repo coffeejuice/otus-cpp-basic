@@ -2,6 +2,9 @@
 # Гарантирует использование современных функций CMake
 cmake_minimum_required(VERSION 3.15)
 
+project(otus-cpp-basic-libs
+        CXX)
+
 # Создаем исполняемый файл с именем "sha256_from_HelloWorld"
 # Исполняемый файл собирается из исходного файла main.cpp
 add_executable(sha256_from_HelloWorld
