@@ -53,6 +53,39 @@ OTUS C++ Basic traning by Aleksandr Troshin
 > - __git remote show [remote_name]__ - Shows information about the specified remote, including the remote branches.
 > - __git branch -a__ - Shows all the local and remote branches.
 
+> ## Conan setup project
+> ### Build new default profile (once after installing Conan)
+> ```bash
+> conan profile detect --force
+> ```
+> ### Conan file
+> ```ini
+> [requires]
+> fmt/11.1.4
+> 
+> [generators]
+> CMakeDeps
+> CMakeToolchain
+> 
+> [layout]
+> cmake_layout
+> ```
+> ### CMake file
+> ```cmake
+> cmake_minimum_required(VERSION 3.24)
+> project(format)
+> find_package(fmt REQUIRED)
+> add_executable(${PROJECT_NAME} format.cpp)
+> target_link_libraries(${PROJECT_NAME} fmt::fmt)
+> set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
+>```
+> ### Set up project
+> ```bash
+> conan install . --output-folder=build/conan --build=missing
+> ```
+> ### Enable CMake Profile 'conan-release' 
+> Profile enable/disable in Settings>Build, Execution, Deployment>CMake
+
 
 > ## Shell commands
 > - **ls -la** - list directory content including hidden one
