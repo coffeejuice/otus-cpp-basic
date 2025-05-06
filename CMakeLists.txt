@@ -1,70 +1,31 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.5)
 
-project(test_project LANGUAGES CXX)
+project(smart_pointers)
 
-#download googletest sources at configure time to build directory
-#build from sources at build time
-include(FetchContent)
-#describe how to get content
-FetchContent_Declare(
-        googletest
-        GIT_REPOSITORY https://github.com/google/googletest.git
-        #it is advisable to use a hash for GIT_TAG rather than a branch or tag name.
-        #A commit hash is more secure and helps to confirm that the downloaded contents are what you expected.
-        GIT_TAG        6910c9d   # release-1.16.0
+add_executable(01_lifetime lifetime.cpp)
+set_target_properties(01_lifetime PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
+
+add_executable(02_raw_pointer raw_pointer.cpp)
+set_target_properties(02_raw_pointer PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
+
+add_executable(03_smart_ptr smart_ptr.cpp)
+set_target_properties(03_smart_ptr PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
+
+add_executable(04_unique_ptr unique_ptr.cpp)
+set_target_properties(04_unique_ptr PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
+
+add_executable(05_shared_ptr shared_ptr.cpp)
+set_target_properties(05_shared_ptr PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
+
+add_executable(06_cycle_ref cycle_ref.cpp)
+set_target_properties(06_cycle_ref PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
+target_compile_options(06_cycle_ref PRIVATE
+    -fsanitize=address
 )
-#make sure that all the dependencies are available
-FetchContent_MakeAvailable(googletest)
-
-#no add_subdirectory to googletest requires!
-
-# Prevent overriding the parent project's compiler/linker
-# settings on Windows
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-
-# Main target
-add_executable(
-        main
-        src/main.cpp
-        src/list.hpp
+target_link_options(06_cycle_ref PRIVATE
+    -fsanitize=address
 )
 
-# Test target
-add_executable(
-        test_list
-        test/test_list.cpp
-)
+add_executable(07_weak_ptr weak_ptr.cpp)
+set_target_properties(07_weak_ptr PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
 
-# Add src to the include directories for the test target
-target_include_directories(
-        test_list PRIVATE
-        "${CMAKE_CURRENT_SOURCE_DIR}/src"
-)
-
-# Link test target against gtest libraries
-target_link_libraries(
-        test_list PRIVATE
-        gtest
-)
-
-set_target_properties(main PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
-set_target_properties(test_list PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
-
-find_package(Python3 COMPONENTS Interpreter Development)
-
-set(Python3_EXECUTABLE /path/to/python3)
-set(Python_EXECUTABLE /path/to/python)
-
-# Set compiler warning flags based on compiler identification
-if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    target_compile_options(main PRIVATE /W4 /WX)
-    target_compile_options(test_list PRIVATE /W4 /WX)
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    target_compile_options(main PRIVATE -Wall -Wextra -pedantic)
-    target_compile_options(test_list PRIVATE -Wall -Wextra -pedantic)
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
-    target_compile_options(main PRIVATE -Wall -Wextra -pedantic)
-    target_compile_options(test_list PRIVATE -Wall -Wextra -pedantic)
-else()
-    message(WARNING "Unknown compiler: ${CMAKE_CXX_COMPILER_ID}. No specific warning flags set.")
-endif()
