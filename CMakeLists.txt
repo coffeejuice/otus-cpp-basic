@@ -50,6 +50,11 @@ target_link_libraries(
 set_target_properties(main PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
 set_target_properties(test_list PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
 
+find_package(Python3 COMPONENTS Interpreter Development)
+
+set(Python3_EXECUTABLE /path/to/python3)
+set(Python_EXECUTABLE /path/to/python)
+
 # Set compiler warning flags based on compiler identification
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     target_compile_options(main PRIVATE /W4 /WX)
