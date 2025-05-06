@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <cstdint>
 
 // Helper class just to trace all actions with an object - ctor, copy and so on.
 class Tracer {
