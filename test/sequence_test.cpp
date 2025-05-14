@@ -233,7 +233,7 @@ TEST_F(SequenceFixture, CopyConstructor)
 TEST(Sequence, DestructorCount) {
     // Setup
     const int elementCount = 10;
-    FakeInt::destructorCalls = 0;
+    FakeInt::resetDestructorCalls();
 
     {
         Sequence<FakeInt> container;
@@ -243,7 +243,7 @@ TEST(Sequence, DestructorCount) {
         // Destructor is called here
     }
 
-    EXPECT_EQ(elementCount, FakeInt::destructorCalls);
+    EXPECT_EQ(elementCount, FakeInt::destructorCalls());
 }
 
 TEST_F(SequenceFixture, MoveAssignment)

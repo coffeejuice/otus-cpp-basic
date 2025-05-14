@@ -233,7 +233,7 @@ TEST_F(ListFixture, CopyConstructor)
 TEST(List, DestructorCount) {
     // Setup
     const int elementCount = 10;
-    FakeInt::destructorCalls = 0;
+    FakeInt::resetDestructorCalls();
 
     {
         List2<FakeInt> container;
@@ -243,7 +243,7 @@ TEST(List, DestructorCount) {
         // Destructor is called here
     }
 
-    EXPECT_EQ(elementCount, FakeInt::destructorCalls);
+    EXPECT_EQ(elementCount, FakeInt::destructorCalls());
 }
 
 TEST_F(ListFixture, MoveAssignment)

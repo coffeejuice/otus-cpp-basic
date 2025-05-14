@@ -44,7 +44,6 @@ add_executable(
 
         # Auxiliary code
         test/fake_int_class.h
-        test/fake_int_class.cpp
 )
 
 # Add src to the include directories for the test target

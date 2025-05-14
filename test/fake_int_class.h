@@ -1,12 +1,12 @@
 #pragma once
 
 
-// Class with trackable destructor
 class FakeInt
 {
-public:
-    static int destructorCalls;
+private:
+    static int m_destructorCalls;
 
+public:
     explicit FakeInt(const int val = 0) : value(val)
     {
         // std::cout << "Initializing constructor for value " << value  << std::endl;
@@ -26,9 +26,14 @@ public:
 
     virtual ~FakeInt()
     {
-        destructorCalls++;
+        m_destructorCalls++;
         // std::cout << "Destructor called. New count = " << destructorCalls << std::endl;
     }
 
     int value;
+
+    static int destructorCalls() { return m_destructorCalls; }
+    static void resetDestructorCalls() { m_destructorCalls = 0; }
 };
+
+// Class with trackable destructor
