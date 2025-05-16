@@ -5,6 +5,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <thread>
+#include <functional>
 
 bool is_prime(int n) {
     if (n < 2) {
