@@ -25,6 +25,9 @@ OTUS C++ Basic traning by Aleksandr Troshin
 > - [Менеджер пакетов Conan для C++ проектов. Открытый вебинар OTUS](https://www.youtube.com/watch?v=Ny5BTWYHzWc)
 > - [The Conan - C/C++ package manager](https://conan.io/center)
 > - [VCPKG - C/C++ package manager](https://vcpkg.io/en/)
+> - [Storage class specifiers](https://en.cppreference.com/w/cpp/language/storage_duration)
+> - [std::call_once](https://en.cppreference.com/w/cpp/thread/call_once)
+> - [std::execution::sequenced_policy, ::parallel_policy, ::parallel_unsequenced_policy, ::unsequenced_policy](https://en.cppreference.com/w/cpp/algorithm/execution_policy_tag_t)
 
 > ## Git commands
 > ### Setup git on new PC
