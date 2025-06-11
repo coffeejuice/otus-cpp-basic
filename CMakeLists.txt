@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.12)
 
 project(final_project LANGUAGES CXX)
 
+find_package(Threads REQUIRED)
+
 #download googletest sources at configure time to build directory
 #build from sources at build time
 include(FetchContent)
@@ -21,6 +23,10 @@ FetchContent_MakeAvailable(googletest)
 # Prevent overriding the parent project's compiler/linker
 # settings on Windows
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
+add_executable(1.condition.intro examples/1.condition.intro.cpp)
+add_executable(2.condition.solution examples/2.condition.solution.cpp)
+add_executable(3.waiting_queue examples/3.waiting_queue.cpp)
 
 # Main target
 add_executable(
