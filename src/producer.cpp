@@ -41,7 +41,7 @@ namespace list {
                 hDir,
                 buffer,
                 bufferSize,
-                FALSE, // Don't watch subdirectories
+                TRUE, // Watch subdirectories
                 FILE_NOTIFY_CHANGE_FILE_NAME | FILE_NOTIFY_CHANGE_LAST_WRITE,
                 &bytesReturned,
                 NULL,
@@ -109,18 +109,20 @@ namespace list {
                         std::cout << "File " << changeType << ": " << fullPathStr << std::endl;
 
                         // Only push to queue for new and modified files (not removed)
-                        if (pNotify->Action == FILE_ACTION_ADDED ||
-                            pNotify->Action == FILE_ACTION_MODIFIED ||
-                            pNotify->Action == FILE_ACTION_RENAMED_NEW_NAME) {
+                        if (
+                            // pNotify->Action == FILE_ACTION_ADDED ||
+                            pNotify->Action == FILE_ACTION_MODIFIED
+                            // || pNotify->Action == FILE_ACTION_RENAMED_NEW_NAME
+                            ) {
 
                             // For this template, we'll push a hash of the path as an integer
                             // In a real implementation, you might want to change WorkQueue to handle strings
-                            std::hash<std::string> hasher;
-                            int pathHash = static_cast<int>(hasher(fullPathStr));
+                            // std::hash<std::string> hasher;
+                            // int pathHash = static_cast<int>(hasher(fullPathStr));
 
                             if (!stop_flag) {
-                                queue.push(pathHash);
-                                std::cout << "Pushed to queue: " << pathHash << " (hash of " << fullPathStr << ")" << std::endl;
+                                queue.push(fullPathStr);
+                                std::cout << "Pushed to queue: " << fullPathStr << std::endl;
                             }
                         }
                     }

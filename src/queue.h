@@ -2,6 +2,7 @@
 #include <condition_variable>
 #include <memory>
 #include <mutex>
+#include <iostream>
 
 namespace list {
         // Mutex + pointer
@@ -50,7 +51,7 @@ namespace list {
                 return false;
             }
             // Take value from the head node.
-            entry = std::move(head->value);
+            entry = std::move(head.ptr->value);
             // And remove the head node from the list.
             std::unique_ptr<Node> prevHead = takeHeadUnsafe();
             return prevHead.get() != nullptr;
@@ -71,6 +72,7 @@ namespace list {
         /// @brief Notify all threads to unblock them.
         void stop() {
             std::scoped_lock lock(head.mutex, tail.mutex);
+            std::cout << "Set m_stopped to True" << std::endl;
             m_stopped = true;
             m_conditional.notify_all();
         }
@@ -102,5 +104,5 @@ namespace list {
         bool m_stopped;
     };
 
-    using WorkQueue = WaitingQueue<int>;
+    using WorkQueue = WaitingQueue<std::string>;
 }
