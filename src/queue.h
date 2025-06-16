@@ -1,19 +1,15 @@
-#include <atomic>
-#include <chrono>
+#pragma once
 #include <condition_variable>
-#include <iostream>
 #include <memory>
 #include <mutex>
-#include <thread>
 
 namespace list {
-    constexpr static int productsCount = 1000;
-
-    // Mutex + pointer
+        // Mutex + pointer
     template <typename T>
     struct WithMutex {
         template <class TT>
-        explicit WithMutex(TT&& ptr) : ptr{std::forward<TT>(ptr)} {} // NOLINT(*-forwarding-reference-overload)
+        explicit WithMutex(TT&& ptr) : ptr{std::forward<TT>(ptr)} {
+        }
 
         T ptr;
         std::mutex mutex;
@@ -22,7 +18,8 @@ namespace list {
     template <typename T>
     struct WaitingQueue {
 
-        WaitingQueue() : head{new Node}, tail{head.ptr.get()}, m_stopped{false} {}
+        WaitingQueue() : head{new Node}, tail{head.ptr.get()}, m_stopped{false} {
+        }
 
         /** @brief Takes entry with waiting is a case of empty queue.
          *  @param entry result entry.
@@ -48,7 +45,7 @@ namespace list {
          */
         bool tryPop(T& entry) {
             std::lock_guard<std::mutex> lck{head.mutex};
-            if (head.ptr.get() == getTailSafe()) {
+            if (head.get() == getTailSafe()) {
                 // WaitingQueue is empty
                 return false;
             }
@@ -80,7 +77,7 @@ namespace list {
 
     private:
         struct Node {
-            T value{};
+            T value;
             std::unique_ptr<Node> next;
         };
 
@@ -106,56 +103,4 @@ namespace list {
     };
 
     using WorkQueue = WaitingQueue<int>;
-
-    void work_producer(WorkQueue& queue, std::atomic<bool>& stop_flag) { // NOLINT
-        for (int i = 0; i < productsCount; ++i) {
-            // put new work in the queue
-            std::cout << "work_producer - put new value: " << i << std::endl;
-            if (!stop_flag)
-                queue.push(i);
-            else
-                break;
-            // wait a bit before the next iteration
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        }
-        std::cout << "work_producer - end of cycle" << std::endl;
-    }
-
-    void work_consumer(WorkQueue& queue) {
-        int value = 0;
-        // make a waiting pop from the queue
-        while (queue.pop(value)) {
-            std::cout << "work_consumer - pop new value: " << value << std::endl;
-        }
-        std::cout << "work_consumer - end of cycle" << std::endl;
-    }
-
-    void main_func() {
-        std::atomic<bool> stop_flag = false;
-        WorkQueue work_queue;
-
-        std::cout << "Launch threads!" << std::endl;
-
-        std::thread work_producer_thread{work_producer, std::ref(work_queue), std::ref(stop_flag)};
-        std::thread work_consumer_thread1{work_consumer, std::ref(work_queue)};
-        std::thread work_consumer_thread2{work_consumer, std::ref(work_queue)};
-
-        std::this_thread::sleep_for(std::chrono::seconds{5});
-
-        std::cout << "Stopping threads..." << std::endl;
-
-        // stop all threads
-        // ReSharper disable once CppDFAUnusedValue
-        stop_flag = true;
-        // need this to unblock all threads, which are waiting the queue
-        work_queue.stop();
-        // wait all threads
-        work_producer_thread.join();
-        work_consumer_thread1.join();
-        work_consumer_thread2.join();
-
-        std::cout << "Threads are stopped!" << std::endl;
-    }
-} // namespace list
-
-int main() { list::main_func(); }
+}

@@ -24,14 +24,20 @@ FetchContent_MakeAvailable(googletest)
 # settings on Windows
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
-add_executable(1.condition.intro examples/1.condition.intro.cpp)
-add_executable(2.condition.solution examples/2.condition.solution.cpp)
-add_executable(3.waiting_queue examples/3.waiting_queue.cpp)
+# add_executable(1.condition.intro examples/1.condition.intro.cpp)
+# add_executable(2.condition.solution examples/2.condition.solution.cpp)
+# add_executable(3.waiting_queue examples/3.waiting_queue.cpp)
 
 # Main target
 add_executable(
         main
         src/main.cpp
+        src/producer.cpp
+        src/producer.h
+        src/queue.h
+        src/constants.h
+        src/consumer.cpp
+        src/consumer.h
 )
 
 # Test target
