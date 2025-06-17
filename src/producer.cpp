@@ -37,19 +37,28 @@ namespace list {
 
         while (!stop_flag) {
             // Read directory changes
+
+            // FILE_NOTIFY_CHANGE_FILE_NAME - Any file name change in the watched directory or subtree causes
+            // a change notification wait operation to return. Changes include renaming, creating, or deleting a file.
+
+            // FILE_NOTIFY_CHANGE_LAST_WRITE - Any change to the last write-time of files in the watched directory or
+            // subtree causes a change notification wait operation to return. The operating system detects
+            // a change to the last write-time only when the file is written to the disk. For operating systems that
+            // use extensive caching, detection occurs only when the cache is sufficiently flushed.
+
             BOOL result = ReadDirectoryChangesW(
                 hDir,
                 buffer,
                 bufferSize,
                 TRUE, // Watch subdirectories
-                FILE_NOTIFY_CHANGE_FILE_NAME | FILE_NOTIFY_CHANGE_LAST_WRITE,
+                FILE_NOTIFY_CHANGE_FILE_NAME | FILE_NOTIFY_CHANGE_LAST_WRITE, // renaming, creating, or deleting a file, change to the last write-time
                 &bytesReturned,
                 NULL,
                 NULL
             );
 
             if (!result) {
-                DWORD error = GetLastError();
+                const DWORD error = GetLastError();
                 if (error == ERROR_OPERATION_ABORTED) {
                     // Normal shutdown
                     break;
